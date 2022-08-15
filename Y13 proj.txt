@@ -1,0 +1,50 @@
+Self-Driving PID Car
+
+PID is a closed feedback loop using Proportional, Intergral, and Derivative calculation, 
+designed to meet a numerical goal without overshooting
+
+Rotational PID
+Accelerational PID
+
+Top-Down map interface, car on the map.
+Click one point, and car travels there.
+Uses PID for turning exactly to the point and no further.
+Uses PID for acceleration exactly onto the point and no further.
+Introduce obstacles in the way that must be avoided / Adjust turning or speed
+(Sand traps, roads vs off-road, ice, different frictions)
+
+Chuck PID into a class - Call it passing in different contexts (Rotation / Velocity)
+
+How to store location of obstacles/ground types?
+
+
+Threaded - Outputs where it is in the algorithm 
+Teaching Based - Information on Intergrals and Derivitaves and how it is being used
+Game based - Have an input from the user to see how close to the target they can get
+
+Multiple windows? One for Canvas, the other for feedback
+
+Extension:
+Add a condition for controlling a real life device?
+Arduino / Breadboard pins hard coded, you can construct a RC Car and just implement software?
+Time Travel? (Teleport the car / destination and see how the car handles
+
+
+The Jennings Extension DLC:
+Space Travel
+Races
+Open World
+Garage (customization)
+Drift/Destruction Combo
+Prox Chat/Open Mic
+Multiplayer
+Speed Cameras
+Dynamic FOV
+Shaders
+Texturepacks
+Raytracing
+Motion Blur
+Neural Networking
+Daylight Cycle
+AMong us
+Collision Detection / Avoidance
