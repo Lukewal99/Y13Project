@@ -5,14 +5,32 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Model1"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" KeyDown="Window_KeyDown" KeyUp="Window_KeyUp">
     <Grid>
-        <Canvas Width="800" Height="450">
-            <Rectangle x:Name="Rectangle" Fill="Blue" Width="80" Height="200" Canvas.Left="360" Canvas.Top="125" RenderTransformOrigin="0.5,0.5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
+        
+        <Canvas Width="800" Height="450" Grid.Column="0">
+            <Rectangle x:Name="Rectangle" Fill="Blue" Width="80" Height="200" Canvas.Left="310" Canvas.Top="125" RenderTransformOrigin="0.5,0.5">
                 <Rectangle.RenderTransform>
                     <RotateTransform Angle="0"/>
                 </Rectangle.RenderTransform>
             </Rectangle>
         </Canvas>
+
+        <Grid Grid.Column="1" Background="LightGray">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="20"/>
+            </Grid.RowDefinitions>
+            <Button x:Name="PidActive" Content="PID Active?" Grid.Row="0" Click="PidActive_Click"/>
+            <TextBlock x:Name="PidActiveDisplay" Text="False" Grid.Row="1" HorizontalAlignment="Center"/>
+        </Grid>
     </Grid>
 </Window>

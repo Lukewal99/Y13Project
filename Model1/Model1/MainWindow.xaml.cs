@@ -22,7 +22,10 @@ namespace Model1
     public partial class MainWindow : Window
     {
         private DispatcherTimer timer;
-        private int rotation = 0;
+        private int currentRotation = 0;
+        private int appliedRotVel = 0;
+        private int pidRotVel = 0;
+        private bool pidActive = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -34,9 +37,42 @@ namespace Model1
         }
         private void TimerEvent(object sender, EventArgs e)
         {
-            rotation = (rotation + 1)%360;
-            RotateTransform rotateTransform = new RotateTransform(rotation);
+            currentRotation = (currentRotation + appliedRotVel + pidRotVel)%360;
+
+            if (pidActive)
+            {
+                //INSERT PID
+            }
+
+
+            RotateTransform rotateTransform = new RotateTransform(currentRotation);
             Rectangle.RenderTransform = rotateTransform;
+        }
+
+        private void PidActive_Click(object sender, RoutedEventArgs e)
+        {
+            pidActive = !pidActive;
+            PidActiveDisplay.Text = Convert.ToString(pidActive);
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Left)
+            {
+                appliedRotVel = -2;
+            }
+            else if (e.Key == Key.Right)
+            {
+                appliedRotVel = 2;
+            }
+        }
+
+        private void Window_KeyUp(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Left || e.Key == Key.Right)
+            {
+                appliedRotVel = 0;
+            }
         }
     }
 }
