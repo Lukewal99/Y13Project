@@ -26,6 +26,10 @@ namespace Model1
         private int appliedRotVel = 0;
         private int pidRotVel = 0;
         private bool pidActive = false;
+
+        private int P = 0;
+        private int I = 0;
+        private int D = 0;
         public MainWindow()
         {
             InitializeComponent();
@@ -73,6 +77,25 @@ namespace Model1
             {
                 appliedRotVel = 0;
             }
+        }
+
+
+        private void PSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            P = Convert.ToInt32(PSlider.Value);
+            PValue.Text = Convert.ToString(P);
+        }
+
+        private void ISlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            I = Convert.ToInt32(ISlider.Value);
+            IValue.Text = Convert.ToString(I);
+        }
+
+        private void DSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            D = Convert.ToInt32(DSlider.Value);
+            DValue.Text = Convert.ToString(D);
         }
     }
 }
