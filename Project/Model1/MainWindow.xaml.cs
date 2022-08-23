@@ -13,6 +13,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using PID;
+
 
 namespace Model1
 {
@@ -22,14 +24,15 @@ namespace Model1
     public partial class MainWindow : Window
     {
         private DispatcherTimer timer;
-        private int currentRotation = 0;
-        private int appliedRotVel = 0;
-        private int pidRotVel = 0;
+        private double currentRotation = 0;
+        private double currentRotVel = 0;
+        private double appliedRotAcc = 0;
+        private double pidRotAcc = 0;
         private bool pidActive = false;
 
-        private int P = 0;
-        private int I = 0;
-        private int D = 0;
+        private double P = 0;
+        private double I = 0;
+        private double D = 0;
         public MainWindow()
         {
             InitializeComponent();
@@ -41,33 +44,70 @@ namespace Model1
         }
         private void TimerEvent(object sender, EventArgs e)
         {
-            currentRotation = (currentRotation + appliedRotVel + pidRotVel)%360;
-
+            
             if (pidActive)
             {
-                //INSERT PID
+                pidRotAcc = PID.PID.next(0,currentRotation,P,I,D,4,30); 
+                // 0.1 slowly meets point
+                // 5 flicks and meets
+                // 10 flicks and meets
+                // 100 overshoots.
+            }
+            else
+            {
+                pidRotAcc = 0;
             }
 
+            currentRotVel = currentRotVel + appliedRotAcc + pidRotAcc;
+
+            currentRotation = (currentRotation + currentRotVel) % 180;
 
             RotateTransform rotateTransform = new RotateTransform(currentRotation);
             Rectangle.RenderTransform = rotateTransform;
+
+            if(currentRotVel > 0.1)
+            {
+                currentRotVel -= 0.1;
+            }
+            else if(currentRotVel < -0.1)
+            {
+                currentRotVel += 0.1;
+            }
+            else
+            {
+                currentRotVel = 0;
+            }
+            AngleDisplay.Text = "Angle: " + currentRotation;
+            RotVelDisplay.Text = "RotVel: " + currentRotVel;
+            PidAccDisplay.Text = "PidAcc: " + pidRotAcc;
+            AppliedAccDisplay.Text = "AppliedAcc: " + appliedRotAcc;
+
         }
 
         private void PidActive_Click(object sender, RoutedEventArgs e)
         {
             pidActive = !pidActive;
             PidActiveDisplay.Text = Convert.ToString(pidActive);
+
+            if (pidActive)
+            {
+                PidActiveDisplay.Foreground = new SolidColorBrush(Color.FromRgb(0,185,0)) ;
+            }
+            else if (!pidActive)
+            {
+                PidActiveDisplay.Foreground = new SolidColorBrush(Color.FromRgb(255,0,0));
+            }
         }
 
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Left)
             {
-                appliedRotVel = -2;
+                appliedRotAcc = -1;
             }
             else if (e.Key == Key.Right)
             {
-                appliedRotVel = 2;
+                appliedRotAcc = 1;
             }
         }
 
@@ -75,26 +115,26 @@ namespace Model1
         {
             if (e.Key == Key.Left || e.Key == Key.Right)
             {
-                appliedRotVel = 0;
+                appliedRotAcc = 0;
             }
         }
 
 
         private void PSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            P = Convert.ToInt32(PSlider.Value);
+            P = Math.Round(Convert.ToDouble(PSlider.Value),2);
             PValue.Text = Convert.ToString(P);
         }
 
         private void ISlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            I = Convert.ToInt32(ISlider.Value);
+            I = Math.Round(Convert.ToDouble(ISlider.Value),3);
             IValue.Text = Convert.ToString(I);
         }
 
         private void DSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            D = Convert.ToInt32(DSlider.Value);
+            D = Math.Round(Convert.ToDouble(DSlider.Value),4);
             DValue.Text = Convert.ToString(D);
         }
     }

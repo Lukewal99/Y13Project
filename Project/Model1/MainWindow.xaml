@@ -13,6 +13,11 @@
         </Grid.ColumnDefinitions>
         
         <Canvas Width="800" Height="450" Grid.Column="0">
+            <TextBlock x:Name="AngleDisplay" Text="Angle: 0" Canvas.Left="0" Canvas.Top="10"/>
+            <TextBlock x:Name="RotVelDisplay" Text="RotVel: 0" Canvas.Left="0" Canvas.Top="30"/>
+            <TextBlock x:Name="PidAccDisplay" Text="PidAcc: 0" Canvas.Left="0" Canvas.Top="50"/>
+            <TextBlock x:Name="AppliedAccDisplay" Text="AppliedAcc: 0" Canvas.Left="0" Canvas.Top="70"/>
+            
             <Rectangle x:Name="Rectangle" Fill="Blue" Width="80" Height="200" Canvas.Left="310" Canvas.Top="125" RenderTransformOrigin="0.5,0.5">
                 <Rectangle.RenderTransform>
                     <RotateTransform Angle="0"/>
@@ -27,7 +32,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Button x:Name="PidActive" Content="PID Active?" Grid.Row="0" Click="PidActive_Click"/>
-            <TextBlock x:Name="PidActiveDisplay" Text="False" Grid.Row="1" HorizontalAlignment="Center"/>
+            <TextBlock x:Name="PidActiveDisplay" Text="False" Grid.Row="1" HorizontalAlignment="Center" Foreground="Red"/>
 
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
@@ -44,9 +49,9 @@
                 <TextBlock Text="P" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="0"/>
                 <TextBlock Text="I" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="1"/>
                 <TextBlock Text="D" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="2"/>
-                <Slider x:Name="PSlider" Grid.Row="1" Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Center" Maximum="10" ValueChanged="PSlider_ValueChanged"/>
-                <Slider x:Name="ISlider" Grid.Row="1" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center" Maximum="100" ValueChanged="ISlider_ValueChanged"/>
-                <Slider x:Name="DSlider" Grid.Row="1" Grid.Column="2" Orientation="Vertical" HorizontalAlignment="Center" Maximum="1000" ValueChanged="DSlider_ValueChanged"/>
+                <Slider x:Name="PSlider" Grid.Row="1" Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Center" Maximum="10" Minimum="0"  ValueChanged="PSlider_ValueChanged" TickFrequency="0.1" SmallChange="0.1" IsSnapToTickEnabled="True"/>
+                <Slider x:Name="ISlider" Grid.Row="1" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center" Maximum="10" Minimum="0"  ValueChanged="ISlider_ValueChanged" TickFrequency="0.1" SmallChange="0.1" IsSnapToTickEnabled="True"/>
+                <Slider x:Name="DSlider" Grid.Row="1" Grid.Column="2" Orientation="Vertical" HorizontalAlignment="Center" Maximum="10" Minimum="0"  ValueChanged="DSlider_ValueChanged" TickFrequency="0.1" SmallChange="0.1" IsSnapToTickEnabled="True"/>
                 <TextBlock x:Name="PValue" Grid.Row="2" Grid.Column="0" Text="0" HorizontalAlignment="Center"/>
                 <TextBlock x:Name="IValue" Grid.Row="2" Grid.Column="1" Text="0" HorizontalAlignment="Center"/>
                 <TextBlock x:Name="DValue" Grid.Row="2" Grid.Column="2" Text="0" HorizontalAlignment="Center"/>
