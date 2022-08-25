@@ -38,7 +38,7 @@ namespace Model1
             InitializeComponent();
 
             timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(0, 0, 0, 0, 1); // every milliseconds
+            timer.Interval = new TimeSpan(0, 0, 0, 0, 10); // every 10 milliseconds
             timer.Tick += TimerEvent;
             timer.Start();
         }
@@ -47,11 +47,8 @@ namespace Model1
             
             if (pidActive)
             {
-                pidRotAcc = PID.PID.next(0,currentRotation,P,I,D,4,30); 
-                // 0.1 slowly meets point
-                // 5 flicks and meets
-                // 10 flicks and meets
-                // 100 overshoots.
+                pidRotAcc = PID.PID.next(0,currentRotation,P,I,D,2000,10);
+               
             }
             else
             {
@@ -65,23 +62,22 @@ namespace Model1
             RotateTransform rotateTransform = new RotateTransform(currentRotation);
             Rectangle.RenderTransform = rotateTransform;
 
-            if(currentRotVel > 0.1)
+            if(currentRotVel > 0.05)
             {
-                currentRotVel -= 0.1;
+                currentRotVel -= 0.05;
             }
-            else if(currentRotVel < -0.1)
+            else if(currentRotVel < -0.05)
             {
-                currentRotVel += 0.1;
+                currentRotVel += 0.05;
             }
             else
             {
                 currentRotVel = 0;
             }
-            AngleDisplay.Text = "Angle: " + currentRotation;
-            RotVelDisplay.Text = "RotVel: " + currentRotVel;
-            PidAccDisplay.Text = "PidAcc: " + pidRotAcc;
-            AppliedAccDisplay.Text = "AppliedAcc: " + appliedRotAcc;
-
+            AngleDisplay.Text = "Angle: " + Math.Round(currentRotation,3);
+            RotVelDisplay.Text = "RotVel: " + Math.Round(currentRotVel,3);
+            PidAccDisplay.Text = "PidAcc: " + Math.Round(pidRotAcc,3);
+            AppliedAccDisplay.Text = "AppliedAcc: " + Math.Round(appliedRotAcc,3);
         }
 
         private void PidActive_Click(object sender, RoutedEventArgs e)
@@ -103,11 +99,21 @@ namespace Model1
         {
             if (e.Key == Key.Left)
             {
-                appliedRotAcc = -1;
+                appliedRotAcc = -0.2;
             }
             else if (e.Key == Key.Right)
             {
-                appliedRotAcc = 1;
+                appliedRotAcc = 0.2;
+            }
+            else if (e.Key == Key.D0)
+            {
+                currentRotation = 0;
+                currentRotVel = 0;
+                pidRotAcc = 0;
+                pidActive = false;
+                PidActiveDisplay.Text = "False";
+                PidActiveDisplay.Foreground = new SolidColorBrush(Color.FromRgb(255, 0, 0));
+                
             }
         }
 

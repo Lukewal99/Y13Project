@@ -11,14 +11,17 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="100"/>
         </Grid.ColumnDefinitions>
-        
+
         <Canvas Width="800" Height="450" Grid.Column="0">
             <TextBlock x:Name="AngleDisplay" Text="Angle: 0" Canvas.Left="0" Canvas.Top="10"/>
             <TextBlock x:Name="RotVelDisplay" Text="RotVel: 0" Canvas.Left="0" Canvas.Top="30"/>
             <TextBlock x:Name="PidAccDisplay" Text="PidAcc: 0" Canvas.Left="0" Canvas.Top="50"/>
             <TextBlock x:Name="AppliedAccDisplay" Text="AppliedAcc: 0" Canvas.Left="0" Canvas.Top="70"/>
-            
-            <Rectangle x:Name="Rectangle" Fill="Blue" Width="80" Height="200" Canvas.Left="310" Canvas.Top="125" RenderTransformOrigin="0.5,0.5">
+            <TextBlock Text="Left or right arrows to turn" Canvas.Left="325" Canvas.Top="390" Width="150" Height="20" TextAlignment="Center"/>
+            <TextBlock Text="0 to reset" Canvas.Left="325" Canvas.Top="405" Width="150" Height="20" TextAlignment="Center"/>
+
+
+            <Rectangle x:Name="Rectangle" Fill="Blue" Width="80" Height="200" Canvas.Left="360" Canvas.Top="125" RenderTransformOrigin="0.5,0.5">
                 <Rectangle.RenderTransform>
                     <RotateTransform Angle="0"/>
                 </Rectangle.RenderTransform>
