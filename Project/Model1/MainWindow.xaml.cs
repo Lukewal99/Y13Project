@@ -33,6 +33,7 @@ namespace Model1
         private double P = 0;
         private double I = 0;
         private double D = 0;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -47,7 +48,7 @@ namespace Model1
             
             if (pidActive)
             {
-                pidRotAcc = PID.PID.next(0,currentRotation,P,I,D,2000,10);
+                pidRotAcc = PID.PID.next(0,currentRotation,P,I,D,2000,10,0.01);
                
             }
             else
@@ -88,9 +89,11 @@ namespace Model1
             if (pidActive)
             {
                 PidActiveDisplay.Foreground = new SolidColorBrush(Color.FromRgb(0,185,0)) ;
+                PID.PID.It = 0;
             }
             else if (!pidActive)
             {
+                
                 PidActiveDisplay.Foreground = new SolidColorBrush(Color.FromRgb(255,0,0));
             }
         }
@@ -110,6 +113,7 @@ namespace Model1
                 currentRotation = 0;
                 currentRotVel = 0;
                 pidRotAcc = 0;
+                PID.PID.It = 0;
                 pidActive = false;
                 PidActiveDisplay.Text = "False";
                 PidActiveDisplay.Foreground = new SolidColorBrush(Color.FromRgb(255, 0, 0));

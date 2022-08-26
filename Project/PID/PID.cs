@@ -4,8 +4,9 @@ namespace PID
 {
     public static class PID
     {
-        public static double next(double SetPoint, double ProcessValue, double kP, double kI, double kD, double Maximum, int Scale)
-        {           //Desired Value, Current Value, constant P,I,D , Maximum allowed return, value used to reduce size of output (returns 1:scale)
+        public static double It = 0;
+        public static double next(double SetPoint, double ProcessValue, double kP, double kI, double kD, double Maximum, int Scale, double timeSinceLastUpdate)
+        {           //Desired Value, Current Value, constant P,I,D , Maximum allowed return, value used to reduce size of output (returns 1:scale), time since last called PID in seconds
             double Error = 0;
             // Difference between Desired and Current
             Error = SetPoint - ProcessValue;
@@ -14,8 +15,8 @@ namespace PID
             double P = kP * Error;
 
             // I
-            double I = 0;
-            double It = 0;
+            double I = kI * Error * timeSinceLastUpdate;
+            It += I;
 
 
             // D
