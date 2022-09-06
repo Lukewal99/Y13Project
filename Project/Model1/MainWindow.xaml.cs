@@ -29,6 +29,9 @@ namespace Model1
         private double appliedRotAcc = 0;
         private double pidRotAcc = 0;
         private bool pidActive = false;
+        //private int Period = 10; //The loop will run every x milliseconds
+        // FOR SOME REASON USING PERIOD DELETES THE RECTANGLE!?!?!?!?!?!?
+
 
         private double P = 0;
         private double I = 0;
@@ -38,8 +41,10 @@ namespace Model1
         {
             InitializeComponent();
 
+
             timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(0, 0, 0, 0, 10); // every 10 milliseconds
+            timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
+            //timer.Interval = new TimeSpan(0, 0, 0, 0, Period);
             timer.Tick += TimerEvent;
             timer.Start();
         }
@@ -48,8 +53,9 @@ namespace Model1
             
             if (pidActive)
             {
-                pidRotAcc = PID.PID.next(0,currentRotation,P,I,D,2000,10,0.01);
-               
+                pidRotAcc = PID.PID.next(0,currentRotation,P,I,D,200,10,0.01);
+                //pidRotAcc = PID.PID.next(0, currentRotation, P, I, D, 200, 10, Period/1000);
+
             }
             else
             {
