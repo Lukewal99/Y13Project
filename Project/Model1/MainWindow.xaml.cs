@@ -23,19 +23,27 @@ namespace Model1
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        public int TYPEP = 0;
+        public int TYPEI = 1;
+        public int TYPED = 1;
+
         private DispatcherTimer timer;
         private double currentRotation = 0;
         private double currentRotVel = 0;
         private double appliedRotAcc = 0;
         private double pidRotAcc = 0;
         private bool pidActive = false;
-        //private int Period = 10; //The loop will run every x milliseconds
+        private int Period = 10; //The loop will run every x milliseconds
         // FOR SOME REASON USING PERIOD DELETES THE RECTANGLE!?!?!?!?!?!?
 
+        PID.PID PID = new PID.PID();
 
-        private double P = 0;
-        private double I = 0;
-        private double D = 0;
+        private double kP = 0;
+        private double kI = 0;
+        private double kD = 0;
+
+        private double[] pidOutput = new double[3];
 
         public MainWindow()
         {
@@ -43,8 +51,8 @@ namespace Model1
 
 
             timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
-            //timer.Interval = new TimeSpan(0, 0, 0, 0, Period);
+            //timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
+            timer.Interval = new TimeSpan(0, 0, 0, 0, Period);
             timer.Tick += TimerEvent;
             timer.Start();
         }
@@ -53,8 +61,20 @@ namespace Model1
             
             if (pidActive)
             {
-                pidRotAcc = PID.PID.next(0,currentRotation,P,I,D,200,10,0.01);
-                //pidRotAcc = PID.PID.next(0, currentRotation, P, I, D, 200, 10, Period/1000);
+
+                //pidOutput = PID.next(0,currentRotation,kP,kI,kD,0.01);
+                double pidTiming = Period / 1000F;
+                pidOutput = PID.next(0, currentRotation, kP, kI, kD, pidTiming);
+
+                pidOutput[0] = PID.Scale(pidOutput[0], 200, TYPEP);
+                pidOutput[1] = PID.Scale(pidOutput[1], 500, TYPEI); // TRY SET UP ENUM FOR TYPE
+                pidOutput[2] = PID.Scale(pidOutput[2], 1000, TYPED);
+                pidOutput[0] = PID.Clamp(pidOutput[0], 3);
+                pidOutput[1] = PID.Clamp(pidOutput[1], 2);
+                pidOutput[2] = PID.Clamp(pidOutput[2], 0.1);
+
+                pidRotAcc = pidOutput[0] + pidOutput[1] + pidOutput[2];
+                
 
             }
             else
@@ -69,11 +89,11 @@ namespace Model1
             RotateTransform rotateTransform = new RotateTransform(currentRotation);
             Rectangle.RenderTransform = rotateTransform;
 
-            if(currentRotVel > 0.05)
+            if(currentRotVel > 0.1)
             {
                 currentRotVel -= 0.05;
             }
-            else if(currentRotVel < -0.05)
+            else if(currentRotVel < -0.1)
             {
                 currentRotVel += 0.05;
             }
@@ -95,7 +115,7 @@ namespace Model1
             if (pidActive)
             {
                 PidActiveDisplay.Foreground = new SolidColorBrush(Color.FromRgb(0,185,0)) ;
-                PID.PID.It = 0;
+                PID.It = 0;
             }
             else if (!pidActive)
             {
@@ -119,7 +139,7 @@ namespace Model1
                 currentRotation = 0;
                 currentRotVel = 0;
                 pidRotAcc = 0;
-                PID.PID.It = 0;
+                PID.It = 0;
                 pidActive = false;
                 PidActiveDisplay.Text = "False";
                 PidActiveDisplay.Foreground = new SolidColorBrush(Color.FromRgb(255, 0, 0));
@@ -138,20 +158,20 @@ namespace Model1
 
         private void PSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            P = Math.Round(Convert.ToDouble(PSlider.Value),2);
-            PValue.Text = Convert.ToString(P);
+            kP = Math.Round(Convert.ToDouble(PSlider.Value),2);
+            PValue.Text = Convert.ToString(kP);
         }
 
         private void ISlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            I = Math.Round(Convert.ToDouble(ISlider.Value),3);
-            IValue.Text = Convert.ToString(I);
+            kI = Math.Round(Convert.ToDouble(ISlider.Value),3);
+            IValue.Text = Convert.ToString(kI);
         }
 
         private void DSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            D = Math.Round(Convert.ToDouble(DSlider.Value),4);
-            DValue.Text = Convert.ToString(D);
+            kD = Math.Round(Convert.ToDouble(DSlider.Value),4);
+            DValue.Text = Convert.ToString(kD);
         }
     }
 }
