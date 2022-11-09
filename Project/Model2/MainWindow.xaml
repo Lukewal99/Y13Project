@@ -1,0 +1,74 @@
+﻿<Window x:Class="Model2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Model2"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+      
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="100"/>
+            </Grid.ColumnDefinitions>
+
+        <Grid Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Canvas Grid.Column="0" Grid.Row="0">
+                <Ellipse Canvas.Left="112.5" Canvas.Top="143.5" Width="25" Height="25" Fill="Brown"/>
+                <Line X1="125" Y1="156" X2="175" Y2="69" Stroke="DarkBlue" x:Name="sideOnArmOne" StrokeThickness="3"/>
+                <Line X1="175" Y1="69" X2="225" Y2="156" Stroke="Red" x:Name="sideOnArmTwo" StrokeThickness="3"/>
+            </Canvas>
+
+            <Canvas Grid.Column="1" Grid.Row="1">
+                <Ellipse Canvas.Top="100" Canvas.Left="162.5" Width="50" Height="50" Fill="Brown"/>
+                <Line X1="175" Y1="125" X2="225" Y2="125" Stroke="DarkBlue" x:Name="topDownArmOne" StrokeThickness="3"/>
+                <Line X1="225" Y1="125" X2="275" Y2="125" Stroke="Red" x:Name="topDownArmTwo" StrokeThickness="3"/>
+            </Canvas>
+        </Grid>
+
+        <Grid Grid.Column="1" Background="DarkGray">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="20"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Button x:Name="PidActive" Content="PID Active?" Grid.Row="0" Click="PidActive_Click"/>
+            <TextBlock x:Name="PidActiveDisplay" Text="False" Grid.Row="1" HorizontalAlignment="Center" Foreground="Red"/>
+
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="20"/>
+                    <RowDefinition Height="20"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="P" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="0"/>
+                <TextBlock Text="I" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="1"/>
+                <TextBlock Text="D" HorizontalAlignment="Center" Grid.Row="0" Grid.Column="2"/>
+                <Slider x:Name="PSlider" Grid.Row="1" Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Center" Maximum="10" Minimum="0"  ValueChanged="PSlider_ValueChanged" TickFrequency="0.1" SmallChange="0.1" IsSnapToTickEnabled="True"/>
+                <Slider x:Name="ISlider" Grid.Row="1" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center" Maximum="10" Minimum="0"  ValueChanged="ISlider_ValueChanged" TickFrequency="0.1" SmallChange="0.1" IsSnapToTickEnabled="True"/>
+                <Slider x:Name="DSlider" Grid.Row="1" Grid.Column="2" Orientation="Vertical" HorizontalAlignment="Center" Maximum="10" Minimum="0"  ValueChanged="DSlider_ValueChanged" TickFrequency="0.1" SmallChange="0.1" IsSnapToTickEnabled="True"/>
+                <TextBlock x:Name="PValue" Grid.Row="2" Grid.Column="0" Text="0" HorizontalAlignment="Center"/>
+                <TextBlock x:Name="IValue" Grid.Row="2" Grid.Column="1" Text="0" HorizontalAlignment="Center"/>
+                <TextBlock x:Name="DValue" Grid.Row="2" Grid.Column="2" Text="0" HorizontalAlignment="Center"/>
+            </Grid>
+        </Grid>
+
+
+    </Grid>
+</Window>

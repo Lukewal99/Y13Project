@@ -35,7 +35,6 @@ namespace Model1
         private double pidRotAcc = 0;
         private bool pidActive = false;
         private int Period = 10; //The loop will run every x milliseconds
-        // FOR SOME REASON USING PERIOD DELETES THE RECTANGLE!?!?!?!?!?!?
 
         PID.PID PID = new PID.PID();
 
