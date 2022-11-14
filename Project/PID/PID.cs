@@ -7,8 +7,16 @@ namespace PID
         public double It = 0;
         static double PreviousError = 0;
         static double Error = 0;
+        double ScaleValue = 0;
+        double ClampValue = 0;
 
-        public double[] next(double SetPoint, double ProcessValue, double kP, double kI, double kD, double timeSinceLastUpdate)
+        public PID(double ScaleValueIn, double ClampValueIn)
+        {
+            ScaleValue = ScaleValueIn;
+            ClampValue = ClampValueIn;
+        }
+
+        public double next(double SetPoint, double ProcessValue, double kP, double kI, double kD, double timeSinceLastUpdate)
         {                           //Desired Value, Current Value, constant P,I,D
             
             // Difference between Desired and Current
@@ -27,31 +35,32 @@ namespace PID
 
             PreviousError = Error;
 
-            double[] output = { P, It, D };
+            P = Clamp(P);
+
+
+            double output = P+It+D;
 
             return output;
         }
 
-        public double Scale(double input, double ScaleValue, int Type)
+        private double Scale(double input)
         {
             double output = input / ScaleValue;
-            if (Type == 0)
+
+            if (output < 0.05 && output > 0)
             {
-                if (output < 0.05 && output > 0)
-                {
-                    return (0.06);
-                }
-                else if (output > -0.05 && output < 0)
-                {
-                    return (-0.06);
-                }
+                return 0.06;
+            }
+            else if (output > -0.05 && output < 0)
+            {
+                return -0.06;
             }
 
-            return (input / ScaleValue);
+            return output;
             
         }
 
-        public double Clamp(double input, double ClampValue)
+        private double Clamp(double input)
         {
             if (input > ClampValue)
             {

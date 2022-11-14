@@ -8,33 +8,27 @@
         Title="MainWindow" Height="450" Width="800">
     <Grid>
       
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="100"/>
-            </Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="100"/>
+        </Grid.ColumnDefinitions>
 
-        <Grid Grid.Column="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
+        
+        <Canvas Grid.Column="0" Grid.Row="0">
+            <TextBlock Text="Desired Distance: " Canvas.Top="10" Canvas.Right="10" x:Name="DesiredDDisplay"/>
+            <TextBlock Text="Desired Angle: " Canvas.Top="30" Canvas.Right="10" x:Name="DesiredThetaDisplay"/>
 
-            <Canvas Grid.Column="0" Grid.Row="0">
-                <Ellipse Canvas.Left="112.5" Canvas.Top="143.5" Width="25" Height="25" Fill="Brown"/>
-                <Line X1="125" Y1="156" X2="175" Y2="69" Stroke="DarkBlue" x:Name="sideOnArmOne" StrokeThickness="3"/>
-                <Line X1="175" Y1="69" X2="225" Y2="156" Stroke="Red" x:Name="sideOnArmTwo" StrokeThickness="3"/>
-            </Canvas>
+            <Ellipse Canvas.Left="425" Canvas.Top="212.5" Width="25" Height="25" Fill="Brown"/>
+            <Line X1="437.5" Y1="225" X2="487.5" Y2="138" Stroke="DarkBlue" x:Name="sideOnArmOne" StrokeThickness="3"/>
+            <Line X1="487.5" Y1="138" X2="537.5" Y2="225" Stroke="Red" x:Name="sideOnArmTwo" StrokeThickness="3"/>
 
-            <Canvas Grid.Column="1" Grid.Row="1">
-                <Ellipse Canvas.Top="100" Canvas.Left="162.5" Width="50" Height="50" Fill="Brown"/>
-                <Line X1="175" Y1="125" X2="225" Y2="125" Stroke="DarkBlue" x:Name="topDownArmOne" StrokeThickness="3"/>
-                <Line X1="225" Y1="125" X2="275" Y2="125" Stroke="Red" x:Name="topDownArmTwo" StrokeThickness="3"/>
-            </Canvas>
-        </Grid>
+            <Ellipse Canvas.Left="0" Canvas.Top="25" Width="400" Height="400" Stroke="Green" Fill="White" x:Name="Range" MouseLeftButtonDown="Range_MouseLeftButtonDown"/>
+            <Ellipse Canvas.Left="175" Canvas.Top="200" Width="50" Height="50" Fill="Brown"/>
+            <Line X1="200" Y1="225" X2="250" Y2="225" Stroke="DarkBlue" x:Name="topDownArmOne" StrokeThickness="3"/>
+            <Line X1="250" Y1="225" X2="300" Y2="225" Stroke="Red" x:Name="topDownArmTwo" StrokeThickness="3"/>
+
+        </Canvas>
+
 
         <Grid Grid.Column="1" Background="DarkGray">
             <Grid.RowDefinitions>

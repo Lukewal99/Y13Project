@@ -24,9 +24,6 @@ namespace Model1
     public partial class MainWindow : Window
     {
 
-        public int TYPEP = 0;
-        public int TYPEI = 1;
-        public int TYPED = 1;
 
         private DispatcherTimer timer;
         private double currentRotation = 0;
@@ -36,13 +33,12 @@ namespace Model1
         private bool pidActive = false;
         private int Period = 10; //The loop will run every x milliseconds
 
-        PID.PID PID = new PID.PID();
+        PID.PID PID = new PID.PID(250,3);
 
         private double kP = 0;
         private double kI = 0;
         private double kD = 0;
 
-        private double[] pidOutput = new double[3];
 
         public MainWindow()
         {
@@ -63,17 +59,7 @@ namespace Model1
 
                 //pidOutput = PID.next(0,currentRotation,kP,kI,kD,0.01);
                 double pidTiming = Period / 1000F;
-                pidOutput = PID.next(0, currentRotation, kP, kI, kD, pidTiming);
-
-                pidOutput[0] = PID.Scale(pidOutput[0], 200, TYPEP);
-                pidOutput[1] = PID.Scale(pidOutput[1], 500, TYPEI); // TRY SET UP ENUM FOR TYPE
-                pidOutput[2] = PID.Scale(pidOutput[2], 1000, TYPED);
-                pidOutput[0] = PID.Clamp(pidOutput[0], 3);
-                pidOutput[1] = PID.Clamp(pidOutput[1], 2);
-                pidOutput[2] = PID.Clamp(pidOutput[2], 0.1);
-
-                pidRotAcc = pidOutput[0] + pidOutput[1] + pidOutput[2];
-                
+                pidRotAcc = PID.next(0, currentRotation, kP, kI, kD, pidTiming);
 
             }
             else
