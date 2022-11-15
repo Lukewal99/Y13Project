@@ -56,12 +56,66 @@ namespace Model2
 
         private void TimerEvent(object sender, EventArgs e)
         {
-            currentD = desiredD;
+            if (pidActive)
+            {
+                double pidTiming = Period / 1000F;
+                currentThetaAcc = anglePID.next(desiredTheta, currentTheta, kP, kI, kD, pidTiming);
+                currentDAcc = distancePID.next(desiredD, currentD, kP, kI, kD, pidTiming);
+            }
+            else
+            {
+                currentDAcc = 0;
+                currentThetaAcc = 0;
+            }
 
+            currentThetaVel = currentThetaVel + currentThetaAcc;
+            currentDVel = currentDVel + currentDAcc;
+
+            currentTheta = (currentTheta + currentThetaVel) % (2 * Math.PI);
+            currentD = Math.Min(currentD + currentDVel,2);
+
+            if (currentThetaVel > 0.1)
+            {
+                currentThetaVel -= 0.05;
+            }
+            else if (currentThetaVel < -0.1)
+            {
+                currentThetaVel += 0.05;
+            }
+            else
+            {
+                currentThetaVel = 0;
+            }
+
+            if (currentDVel > 0.1)
+            {
+                currentDVel -= 0.05;
+            }
+            else if (currentDVel < -0.1)
+            {
+                currentDVel += 0.05;
+            }
+            else
+            {
+                currentDVel = 0;
+            }
+
+
+            // ADD MORE TEXT DISPLAY. SHOULD WORK, NEEDS TESTING
+
+
+            //changes arm to reflect currentTheta
+            topDownArmOne.X2 = topDownArmOne.X1 + (currentD/2) * Math.Cos(currentTheta);
+            topDownArmOne.Y2 = topDownArmOne.Y1 + (currentD/2) * Math.Sin(currentTheta);
+
+            topDownArmTwo.X1 = topDownArmOne.X2;
+            topDownArmTwo.Y1 = topDownArmOne.Y2;
+            topDownArmTwo.X2 = topDownArmOne.X1 + currentD * Math.Cos(currentTheta);
+            topDownArmTwo.Y2 = topDownArmOne.Y1 + currentD * Math.Sin(currentTheta);
 
             //changes arms to reflect currentD
-            sideOnArmOne.X2 = sideOnArmOne.X1 + desiredD/2;
-            sideOnArmOne.Y2 = sideOnArmOne.Y1 - Math.Sqrt((100*100)-(desiredD*desiredD/4));
+            sideOnArmOne.X2 = sideOnArmOne.X1 + currentD / 2;
+            sideOnArmOne.Y2 = sideOnArmOne.Y1 - Math.Sqrt((100*100)-(currentD * currentD / 4));
 
             sideOnArmTwo.X1 = sideOnArmOne.X2;
             sideOnArmTwo.Y1 = sideOnArmOne.Y2;
