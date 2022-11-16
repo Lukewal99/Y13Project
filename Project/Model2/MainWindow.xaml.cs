@@ -27,8 +27,8 @@ namespace Model2
         private bool pidActive = false;
         private int Period = 10; //The loop will run every x milliseconds
 
-        PID.PID anglePID = new PID.PID(1,10);
-        PID.PID distancePID = new PID.PID(1,10000);
+        PID.PID anglePID = new PID.PID(100,10);
+        PID.PID distancePID = new PID.PID(10,20);
 
         private double kP = 0;
         private double kI = 0;
@@ -52,15 +52,19 @@ namespace Model2
             timer.Interval = new TimeSpan(0, 0, 0, 0, Period);
             timer.Tick += TimerEvent;
             timer.Start();
+
         }
 
         private void TimerEvent(object sender, EventArgs e)
         {
             if (pidActive)
             {
-                double pidTiming = Period / 1000F;
+                double pidTiming = Period / 1000;
+                
+                //Derivative is REALLY broken for this model
                 currentThetaAcc = anglePID.next(desiredTheta, currentTheta, kP, kI, kD, pidTiming);
                 currentDAcc = distancePID.next(desiredD, currentD, kP, kI, kD, pidTiming);
+
             }
             else
             {
@@ -71,8 +75,8 @@ namespace Model2
             currentThetaVel = currentThetaVel + currentThetaAcc;
             currentDVel = currentDVel + currentDAcc;
 
-            currentTheta = (currentTheta + currentThetaVel) % (2 * Math.PI);
-            currentD = Math.Min(currentD + currentDVel,2);
+            currentTheta = Math.Abs((currentTheta + currentThetaVel) % (2*Math.PI));
+            currentD = Math.Min(currentD + currentDVel,200);
 
             if (currentThetaVel > 0.1)
             {
@@ -101,8 +105,17 @@ namespace Model2
             }
 
 
-            // ADD MORE TEXT DISPLAY. SHOULD WORK, NEEDS TESTING
 
+            CurrentThetaDisplay.Text = "Current Angle: " + Convert.ToString(currentTheta);
+            CurrentDDisplay.Text = "Current Distance: " + Convert.ToString(currentD);
+            ThetaVelDisplay.Text = "Theta Velocity: " + Convert.ToString(currentThetaVel);
+            ThetaAccelerationDisplay.Text = "Theta Acceleration: " + Convert.ToString(currentThetaAcc);
+            DistanceVelocityDisplay.Text = "Distance Velocity: " + Convert.ToString(currentDVel);
+            DistanceAccelerationDisplay.Text = "Distance Acceleration: " + Convert.ToString(currentDAcc);
+
+            //Sets a pointer position to the current desired location
+            Canvas.SetLeft(pointer, Canvas.GetLeft(topDownBase) + topDownBase.Width/2 - pointer.Width/2 + desiredD * Math.Cos(desiredTheta));
+            Canvas.SetTop(pointer, Canvas.GetTop(topDownBase) + topDownBase.Height/2 - pointer.Height/2 + desiredD * Math.Sin(desiredTheta));
 
             //changes arm to reflect currentTheta
             topDownArmOne.X2 = topDownArmOne.X1 + (currentD/2) * Math.Cos(currentTheta);

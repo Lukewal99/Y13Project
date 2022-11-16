@@ -31,36 +31,29 @@ namespace PID
 
             // D
             double D = kD * (Error - PreviousError) / timeSinceLastUpdate;
-            
 
+            Clamp(D, ClampValue/3);
             PreviousError = Error;
 
-            P = Clamp(P);
 
 
             double output = P+It+D;
 
+            output = Scale(output, ScaleValue);
+            output = Clamp(output, ClampValue);
+
             return output;
         }
 
-        private double Scale(double input)
+        private double Scale(double input, double ScaleValue)
         {
             double output = input / ScaleValue;
-
-            if (output < 0.05 && output > 0)
-            {
-                return 0.06;
-            }
-            else if (output > -0.05 && output < 0)
-            {
-                return -0.06;
-            }
 
             return output;
             
         }
 
-        private double Clamp(double input)
+        private double Clamp(double input, double ClampValue)
         {
             if (input > ClampValue)
             {
@@ -69,6 +62,10 @@ namespace PID
             else if (input < -ClampValue)
             {
                 return -ClampValue;
+            }
+            else if (0.001/ScaleValue < input && input < 0.001/ScaleValue)
+            {
+                return 0;
             }
             else
             {
