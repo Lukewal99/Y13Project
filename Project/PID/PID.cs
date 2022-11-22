@@ -5,8 +5,8 @@ namespace PID
     public class PID
     {
         public double It = 0;
-        static double PreviousError = 0;
-        static double Error = 0;
+        private double PreviousError = 0;
+        private double Error = 0;
         double ScaleValue = 0;
         double ClampValue = 0;
 
@@ -27,15 +27,16 @@ namespace PID
 
             // I
             double I = kI * Error * timeSinceLastUpdate;
-            It += I;
+            this.It += I;
 
             // D
             double D = kD * (Error - PreviousError) / timeSinceLastUpdate;
 
-            Clamp(D, ClampValue/3);
-            PreviousError = Error;
-
-
+            D = Scale(D, ScaleValue);
+            D = Clamp(D, ClampValue/3);
+            this.PreviousError = Error;
+            
+            
 
             double output = P+It+D;
 

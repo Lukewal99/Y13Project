@@ -33,7 +33,7 @@ namespace Model1
         private bool pidActive = false;
         private int Period = 10; //The loop will run every x milliseconds
 
-        PID.PID PID = new PID.PID(250,3);
+        PID.PID PID = new PID.PID(250,0.5);
 
         private double kP = 0;
         private double kI = 0;
