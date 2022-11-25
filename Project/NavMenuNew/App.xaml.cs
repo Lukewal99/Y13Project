@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace Model1
+namespace NavMenuNew
 {
     /// <summary>
     /// Interaction logic for App.xaml

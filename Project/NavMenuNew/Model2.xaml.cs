@@ -13,14 +13,13 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-using PID;
 
-namespace Model2
+namespace NavMenuNew
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for Model2.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class Model2 : UserControl
     {
         private DispatcherTimer timer;
 
@@ -28,15 +27,15 @@ namespace Model2
         static int Period = 10; //The loop will run every x milliseconds
         double pidTiming = Convert.ToDouble(Period) / 1000;
 
-        PID.PID anglePID = new PID.PID(1000,0.1);
-        PID.PID distancePID = new PID.PID(400,0.5);
+        PID.PID anglePID = new PID.PID(1000, 0.1);
+        PID.PID distancePID = new PID.PID(400, 0.5);
 
         private double kP = 0;
         private double kI = 0;
         private double kD = 0;
 
         private double desiredD = 100;
-        private double desiredTheta = Math.PI/2;
+        private double desiredTheta = Math.PI / 2;
 
         private double currentD = 0;
         private double currentTheta = 0;
@@ -45,7 +44,7 @@ namespace Model2
         private double currentThetaVel = 0;
         private double currentThetaAcc = 0;
 
-        public MainWindow()
+        public Model2()
         {
             InitializeComponent();
 
@@ -82,9 +81,9 @@ namespace Model2
                 currentThetaAcc = 0;
             }
 
-            currentThetaVel = Math.Min(currentThetaVel + currentThetaAcc, Math.PI/10);
-            
-            if(currentDVel + currentDAcc > 0)
+            currentThetaVel = Math.Min(currentThetaVel + currentThetaAcc, Math.PI / 10);
+
+            if (currentDVel + currentDAcc > 0)
             {
                 currentDVel = Math.Min(currentDVel + currentDAcc, 2);
             }
@@ -94,7 +93,7 @@ namespace Model2
             }
 
             currentTheta = (currentTheta + currentThetaVel);
-            while(currentTheta < 0) 
+            while (currentTheta < 0)
             {
                 currentTheta += 2 * Math.PI;
             }
@@ -102,8 +101,8 @@ namespace Model2
             currentD = Math.Min(Math.Abs(currentD + currentDVel), 200);
 
 
-            
-            if(Math.Abs(currentD) == 200)
+
+            if (Math.Abs(currentD) == 200)
             {
                 currentDVel = 0;
             }
@@ -113,11 +112,11 @@ namespace Model2
 
             if (currentThetaVel > 0)
             {
-                currentThetaVel = 0.98*currentThetaVel;
+                currentThetaVel = 0.98 * currentThetaVel;
             }
             else if (currentThetaVel < 0)
             {
-                currentThetaVel = 0.98*currentThetaVel;
+                currentThetaVel = 0.98 * currentThetaVel;
             }
             else if (currentThetaVel < 0.01 && currentThetaVel > -0.01)
             {
@@ -135,11 +134,11 @@ namespace Model2
 
             if (currentDVel > 0.1)
             {
-                currentDVel = 0.98* currentDVel;
+                currentDVel = 0.98 * currentDVel;
             }
             else if (currentDVel < -0.1)
             {
-                currentDVel = 0.98*currentDVel;
+                currentDVel = 0.98 * currentDVel;
             }
             else
             {
@@ -148,7 +147,7 @@ namespace Model2
 
             DesiredThetaDisplay.Text = "Desired Angle: " + Convert.ToString(Math.Round(desiredTheta, 2));
             DesiredDDisplay.Text = "Desired Distance: " + Convert.ToString(Math.Round(desiredD, 2));
-            CurrentThetaDisplay.Text = "Current Angle: " + Convert.ToString( Math.Round(currentTheta,2));
+            CurrentThetaDisplay.Text = "Current Angle: " + Convert.ToString(Math.Round(currentTheta, 2));
             CurrentDDisplay.Text = "Current Distance: " + Convert.ToString(Math.Round(currentD, 2));
             ThetaVelDisplay.Text = "Theta Velocity: " + Convert.ToString(Math.Round(currentThetaVel, 3));
             ThetaAccelerationDisplay.Text = "Theta Acceleration: " + Convert.ToString(Math.Round(currentThetaAcc, 4));
@@ -156,12 +155,12 @@ namespace Model2
             DistanceAccelerationDisplay.Text = "Distance Acceleration: " + Convert.ToString(Math.Round(currentDAcc, 4));
 
             //Sets a pointer position to the current desired location
-            Canvas.SetLeft(pointer, Canvas.GetLeft(topDownBase) + topDownBase.Width/2 - pointer.Width/2 + desiredD * Math.Cos(desiredTheta));
-            Canvas.SetTop(pointer, Canvas.GetTop(topDownBase) + topDownBase.Height/2 - pointer.Height/2 + desiredD * Math.Sin(desiredTheta));
+            Canvas.SetLeft(pointer, Canvas.GetLeft(topDownBase) + topDownBase.Width / 2 - pointer.Width / 2 + desiredD * Math.Cos(desiredTheta));
+            Canvas.SetTop(pointer, Canvas.GetTop(topDownBase) + topDownBase.Height / 2 - pointer.Height / 2 + desiredD * Math.Sin(desiredTheta));
 
             //changes arm to reflect currentTheta
-            topDownArmOne.X2 = topDownArmOne.X1 + (currentD/2) * Math.Cos(currentTheta);
-            topDownArmOne.Y2 = topDownArmOne.Y1 + (currentD/2) * Math.Sin(currentTheta);
+            topDownArmOne.X2 = topDownArmOne.X1 + (currentD / 2) * Math.Cos(currentTheta);
+            topDownArmOne.Y2 = topDownArmOne.Y1 + (currentD / 2) * Math.Sin(currentTheta);
 
             topDownArmTwo.X1 = topDownArmOne.X2;
             topDownArmTwo.Y1 = topDownArmOne.Y2;
@@ -170,7 +169,7 @@ namespace Model2
 
             //changes arms to reflect currentD
             sideOnArmOne.X2 = sideOnArmOne.X1 + currentD / 2;
-            sideOnArmOne.Y2 = sideOnArmOne.Y1 - Math.Sqrt((100*100)-(currentD * currentD / 4));
+            sideOnArmOne.Y2 = sideOnArmOne.Y1 - Math.Sqrt((100 * 100) - (currentD * currentD / 4));
 
             sideOnArmTwo.X1 = sideOnArmOne.X2;
             sideOnArmTwo.Y1 = sideOnArmOne.Y2;
@@ -221,7 +220,7 @@ namespace Model2
             double x = mousePos.X - 200;
             double y = mousePos.Y - 200;
 
-            desiredD = Math.Min( Math.Sqrt(x * x + y * y),200);
+            desiredD = Math.Min(Math.Sqrt(x * x + y * y), 200);
 
             if (x >= 0)
             {
@@ -229,9 +228,9 @@ namespace Model2
                 {
                     desiredTheta = Math.Atan(y / x);
                 }
-                else if(y < 0)
+                else if (y < 0)
                 {
-                    desiredTheta = Math.Atan(y / x) + 2*Math.PI;
+                    desiredTheta = Math.Atan(y / x) + 2 * Math.PI;
                 }
             }
             else if (x < 0)
@@ -239,8 +238,19 @@ namespace Model2
                 desiredTheta = Math.Atan(y / x) + Math.PI;
             }
 
-            DesiredDDisplay.Text = "Desired Distance: " + Convert.ToString(Math.Round(desiredD,2));
-            DesiredThetaDisplay.Text = "Desired Angle: " + Convert.ToString(Math.Round(desiredTheta,2));
+            DesiredDDisplay.Text = "Desired Distance: " + Convert.ToString(Math.Round(desiredD, 2));
+            DesiredThetaDisplay.Text = "Desired Angle: " + Convert.ToString(Math.Round(desiredTheta, 2));
+        }
+
+        private void GoBack_Click(object sender, RoutedEventArgs e)
+        {
+            UserControl Model = new NavMenu();
+            Canvas.SetLeft(Model, 0);
+            Canvas.SetTop(Model, 0);
+
+            Canvas MainCanvas = (Canvas)this.Parent;
+            MainCanvas.Children.Clear();
+            MainCanvas.Children.Add(Model);
         }
     }
 }

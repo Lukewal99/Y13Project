@@ -1,20 +1,20 @@
-﻿<Window x:Class="Model2.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Model2"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+﻿<UserControl x:Class="NavMenuNew.Model2"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:NavMenuNew"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-      
+
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="700"/>
             <ColumnDefinition Width="100"/>
         </Grid.ColumnDefinitions>
 
-        
-        <Canvas Grid.Column="0" Grid.Row="0" x:Name="largeCanvas">
+
+        <Canvas Grid.Column="0" Grid.Row="0" x:Name="largeCanvas" Background="White">
             <TextBlock Text="Desired Distance: " Canvas.Top="10" Canvas.Right="10" x:Name="DesiredDDisplay"/>
             <TextBlock Text="Desired Angle: " Canvas.Top="30" Canvas.Right="10" x:Name="DesiredThetaDisplay"/>
             <TextBlock Text="Current Distance: " Canvas.Top="50" Canvas.Right="10" x:Name="CurrentDDisplay"/>
@@ -46,11 +46,13 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="20"/>
-                <RowDefinition Height="*"/>
+                <RowDefinition Height="330"/>
+                <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
             <Button x:Name="PidActive" Content="PID Active?" Grid.Row="0" Click="PidActive_Click"/>
             <TextBlock x:Name="PidActiveDisplay" Text="False" Grid.Row="1" HorizontalAlignment="Center" Foreground="Red"/>
-
+            <Button x:Name="GoBack" Content="Go Back" Grid.Row="3" Click="GoBack_Click" />
+            
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -77,4 +79,4 @@
 
 
     </Grid>
-</Window>
+</UserControl>
