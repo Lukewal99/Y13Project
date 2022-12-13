@@ -52,8 +52,7 @@ namespace NavMenuNew
 
         private void ModelThree_Click(object sender, RoutedEventArgs e)
         {
-            //JUST PUT THIS IS WHEN MODEL 3 EXISTS
-            //Model = new Model3();
+            Model = new Model3();
             Canvas.SetLeft(Model, 0);
             Canvas.SetTop(Model, 0);
             Canvas MainCanvas = (Canvas)this.Parent;
