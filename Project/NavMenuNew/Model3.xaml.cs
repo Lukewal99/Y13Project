@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace NavMenuNew
 {
@@ -34,12 +35,13 @@ namespace NavMenuNew
         private double kI = 0;
         private double kD = 0;
 
-        private double currentX = 0;
-        private double currentY = 0;
+        private double currentX = 100;
+        private double currentY = 100;
         private double currentTheta = 0;
+        private double currentD = 0;
 
-        private double desiredX = 0;
-        private double desiredY = 0;
+        private double desiredX = -10;
+        private double desiredY = -10;
 
         private double DVel = 0;
         private double DAcc = 0;
@@ -51,6 +53,11 @@ namespace NavMenuNew
         public Model3()
         {
             InitializeComponent();
+
+            timer = new DispatcherTimer();
+            timer.Interval = new TimeSpan(0, 0, 0, 0, Period);
+            timer.Tick += TimerEvent;
+            timer.Start();
         }
 
         private void TimerEvent(object sender, EventArgs e)
@@ -60,19 +67,21 @@ namespace NavMenuNew
             {
                 if (desiredY-currentY >= 0)
                 {
-                    desiredTheta = Math.Atan((desiredY-desiredY) / (desiredX-currentX));
+                    desiredTheta = Math.Atan((desiredY-currentY) / (desiredX-currentX));
                 }
                 else if (desiredY - currentY < 0)
                 {
-                    desiredTheta = Math.Atan((desiredY - desiredY) / (desiredX - currentX)) + 2 * Math.PI;
+                    desiredTheta = Math.Atan((desiredY -currentY) / (desiredX - currentX)) + 2 * Math.PI;
                 }
             }
             else if (desiredX - currentX < 0)
             {
-                desiredTheta = Math.Atan((desiredY - desiredY) / (desiredX - currentX)) + Math.PI;
+                desiredTheta = Math.Atan((desiredY -currentY) / (desiredX - currentX)) + Math.PI;
             }
 
             // Calculate PID
+            // Logic not quite right? Something going wrong.
+
             if (pidActive)
             {
                 DAcc = distancePID.next(desiredD, 0, kP, kI, kD, pidTiming);
@@ -181,6 +190,15 @@ namespace NavMenuNew
             Canvas.SetTop(Car, currentY);
             Canvas.SetLeft(Pointer, desiredX);
             Canvas.SetTop(Pointer, desiredY);
+
+            DesiredDDisplay.Text = "Desired Distance: " + Math.Round(desiredD,2);
+            DesiredThetaDisplay.Text = "Desired Angle: " + Math.Round(desiredTheta,2);
+            CurrentDDisplay.Text = "Current Distance: " + Math.Round(currentD,2);
+            CurrentThetaDisplay.Text = "Current Angle: " + Math.Round(currentTheta,2);
+            ThetaVelDisplay.Text = "Theta Velocity: " + Math.Round(TVel,7);
+            ThetaAccelerationDisplay.Text = "Theta Acceleration: " + Math.Round(TAcc,7);
+            DistanceVelocityDisplay.Text = "Distance Velocity: " + Math.Round(DVel,2);
+            DistanceAccelerationDisplay.Text = "Distance Acceleration: " + Math.Round(DAcc,2);
         }
 
         private void PSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
