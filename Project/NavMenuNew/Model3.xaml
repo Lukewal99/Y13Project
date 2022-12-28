@@ -16,7 +16,11 @@
         <Canvas Grid.Column="0" Grid.Row="0" x:Name="largeCanvas" Background="White" MouseLeftButtonDown="largeCanvas_MouseLeftButtonDown">
 
             <Ellipse x:Name="Pointer" Fill="Green" Width="10" Height="10" Canvas.Left="-10" Canvas.Top="-10"/>
-            <Rectangle x:Name="Car" Width="100" Height="56" Canvas.Left="100" Canvas.Top="100" Fill="Red"/>
+            <Rectangle x:Name="Car" Width="100" Height="56" Canvas.Left="100" Canvas.Top="100" Fill="Red">
+                <Rectangle.RenderTransform>
+                    <RotateTransform Angle="0"/>
+                </Rectangle.RenderTransform>
+            </Rectangle>
             <Image x:Name="Car1" Source="/Car.png" Width="100" Height="56" Canvas.Left="100" Canvas.Top="100" />
 
             <TextBlock Text="Desired Distance: " Canvas.Top="10" Canvas.Right="10" x:Name="DesiredDDisplay"/>

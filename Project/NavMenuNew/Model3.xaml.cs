@@ -50,6 +50,8 @@ namespace NavMenuNew
 
         private double desiredD = 0;
         private double desiredTheta = 0;
+
+
         public Model3()
         {
             InitializeComponent();
@@ -62,62 +64,28 @@ namespace NavMenuNew
 
         private void TimerEvent(object sender, EventArgs e)
         {
-            desiredD = Math.Sqrt((desiredX-currentX)*(desiredX-currentX) + (desiredY-currentY)*(desiredY-currentY));
-            if (desiredX-currentX >= 0)
-            {
-                if (desiredY-currentY >= 0)
-                {
-                    desiredTheta = Math.Atan((desiredY-currentY) / (desiredX-currentX));
-                }
-                else if (desiredY - currentY < 0)
-                {
-                    desiredTheta = Math.Atan((desiredY -currentY) / (desiredX - currentX)) + 2 * Math.PI;
-                }
-            }
-            else if (desiredX - currentX < 0)
-            {
-                desiredTheta = Math.Atan((desiredY -currentY) / (desiredX - currentX)) + Math.PI;
-            }
+            // Calculate desiredD and desiredTheta from desiredX and desiredY
+
+
 
             // Calculate PID
-            // Logic not quite right? Something going wrong.
+            // set DAcc and TAcc to 0 with !pidActive
+           
 
-            if (pidActive)
-            {
-                DAcc = distancePID.next(desiredD, 0, kP, kI, kD, pidTiming);
 
-                if (currentTheta < desiredTheta - Math.PI)
-                {
-                    TAcc = anglePID.next(desiredTheta - 2 * Math.PI, currentTheta, kP, kI, kD, pidTiming);
-                }
-                else if (currentTheta - Math.PI > desiredTheta)
-                {
-                    TAcc = anglePID.next(desiredTheta, currentTheta - 2 * Math.PI, kP, kI, kD, pidTiming);
-                }
-                else
-                {
-                    TAcc = anglePID.next(desiredTheta, currentTheta, kP, kI, kD, pidTiming);
-                }
-
-            }
-            else
-            {
-                DAcc = 0;
-                TAcc = 0;
-            }
 
             // Apply TAcc
+            // Cap at 0.314
             TVel = Math.Min(TVel + TAcc, Math.PI / 10);
 
+
+
             // Apply DAcc
-            if (DVel + DAcc > 0)
-            {
-                DVel = Math.Min(DVel + DAcc, 2);
-            }
-            else
-            {
-                DVel = Math.Max(DVel + DAcc, -2);
-            }
+            // always positive
+            // Cap at 2
+            DVel = Math.Min(DVel + DAcc, 2);
+
+
 
             // Apply TVel
             currentTheta = (currentTheta + TVel);
@@ -126,27 +94,9 @@ namespace NavMenuNew
                 currentTheta += 2 * Math.PI;
             }
 
+
+
             // Apply DVel
-            if(currentTheta > (3/2) * Math.PI)
-            {
-                currentX -= DVel*Math.Cos(currentTheta-(3/2)*Math.PI);
-                currentY += DVel*Math.Sin(currentTheta-(3/2)*Math.PI);
-            }
-            else if (currentTheta > Math.PI)
-            {
-                currentX -= DVel * Math.Cos(currentTheta -  Math.PI);
-                currentY -= DVel * Math.Sin(currentTheta -  Math.PI);
-            }
-            else if (currentTheta > Math.PI/2)
-            {
-                currentX += DVel * Math.Cos(currentTheta - Math.PI/2);
-                currentY -= DVel * Math.Sin(currentTheta - Math.PI/2);
-            }
-            else
-            {
-                currentX += DVel * Math.Cos(currentTheta);
-                currentY += DVel * Math.Sin(currentTheta);
-            }
             
             
             // Apply Resistance
@@ -157,10 +107,6 @@ namespace NavMenuNew
             else if (TVel < 0)
             {
                 TVel = 0.98 * TVel;
-            }
-            else if (TVel < 0.01 && TVel > -0.01)
-            {
-                TVel = 0;
             }
 
             if (TVel > 0.25)
@@ -176,10 +122,6 @@ namespace NavMenuNew
             {
                 DVel = 0.98 * DVel;
             }
-            else if (DVel < -0.1)
-            {
-                DVel = 0.98 * DVel;
-            }
             else
             {
                 DVel = 0;
@@ -190,6 +132,9 @@ namespace NavMenuNew
             Canvas.SetTop(Car, currentY);
             Canvas.SetLeft(Pointer, desiredX);
             Canvas.SetTop(Pointer, desiredY);
+
+            RotateTransform rotateTransform = new RotateTransform(currentTheta);
+            Car.RenderTransform = rotateTransform;
 
             DesiredDDisplay.Text = "Desired Distance: " + Math.Round(desiredD,2);
             DesiredThetaDisplay.Text = "Desired Angle: " + Math.Round(desiredTheta,2);
