@@ -25,8 +25,7 @@
 
             <TextBlock Text="Desired Distance: " Canvas.Top="10" Canvas.Right="10" x:Name="DesiredDDisplay"/>
             <TextBlock Text="Desired Angle: " Canvas.Top="30" Canvas.Right="10" x:Name="DesiredThetaDisplay"/>
-            <TextBlock Text="Current Distance: " Canvas.Top="50" Canvas.Right="10" x:Name="CurrentDDisplay"/>
-            <TextBlock Text="Current Angle: " Canvas.Top="70" Canvas.Right="10" x:Name="CurrentThetaDisplay"/>
+            <TextBlock Text="Current Angle: " Canvas.Top="50" Canvas.Right="10" x:Name="CurrentThetaDisplay"/>
 
             <TextBlock Text="Theta Velocity: " Canvas.Top="100" Canvas.Right="10" x:Name="ThetaVelDisplay"/>
             <TextBlock Text="Theta Acceleration: " Canvas.Top="120" Canvas.Right="10" x:Name="ThetaAccelerationDisplay"/>

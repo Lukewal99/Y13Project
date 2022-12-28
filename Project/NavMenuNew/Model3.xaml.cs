@@ -38,7 +38,6 @@ namespace NavMenuNew
         private double currentX = 100;
         private double currentY = 100;
         private double currentTheta = 0;
-        private double currentD = 0;
 
         private double desiredX = -10;
         private double desiredY = -10;
@@ -64,14 +63,8 @@ namespace NavMenuNew
 
         private void TimerEvent(object sender, EventArgs e)
         {
-
-
-
-
             // Calculate PID
             // set DAcc and TAcc to 0 if !pidActive
-
-
 
 
             // Apply TAcc
@@ -92,19 +85,36 @@ namespace NavMenuNew
             DVel = Math.Min(DVel + DAcc, 2);
 
 
-
             // Apply TVel
-            currentTheta = (currentTheta + TVel);
-            while (currentTheta < 0)
+            currentTheta = (currentTheta + TVel)%(2*Math.PI);
+            if(currentTheta < 0)
             {
-                currentTheta += 2 * Math.PI;
+                currentTheta = -currentTheta;
             }
 
-
-
+            currentTheta = Math.PI/2;
+            
             // Apply DVel
-
-
+            if (currentTheta >= 1.5*Math.PI)
+            {
+                currentX -= DVel*Math.Cos(currentTheta-1.5*Math.PI);
+                currentY -= DVel*Math.Sin(currentTheta-1.5*Math.PI);
+            }
+            else if(currentTheta >= Math.PI)
+            {
+                currentX -= DVel * Math.Sin(currentTheta - Math.PI);
+                currentY += DVel * Math.Cos(currentTheta - Math.PI);
+            }
+            else if (currentTheta >= 0.5 * Math.PI)
+            {
+                currentX += DVel * Math.Cos(currentTheta - 0.5 * Math.PI);
+                currentY += DVel * Math.Sin(currentTheta - 0.5 * Math.PI);
+            }
+            else
+            {
+                currentX += DVel * Math.Cos(currentTheta);
+                currentY -= DVel * Math.Sin(currentTheta);
+            }
 
             // Apply Resistance
             TVel *= 0.98;
@@ -131,12 +141,11 @@ namespace NavMenuNew
             Canvas.SetLeft(Car, currentX);
             Canvas.SetTop(Car, currentY);
 
-            RotateTransform rotateTransform = new RotateTransform(currentTheta);
+            RotateTransform rotateTransform = new RotateTransform(360*currentTheta/(2*Math.PI) -90);
             Car.RenderTransform = rotateTransform;
 
             DesiredDDisplay.Text = "Desired Distance: " + Math.Round(desiredD,2);
             DesiredThetaDisplay.Text = "Desired Angle: " + Math.Round(desiredTheta/Math.PI,2) + " Pi";
-            CurrentDDisplay.Text = "Current Distance: " + Math.Round(currentD,2);
             CurrentThetaDisplay.Text = "Current Angle: " + Math.Round(currentTheta/Math.PI,2) +" Pi";
             ThetaVelDisplay.Text = "Theta Velocity: " + Math.Round(TVel,7);
             ThetaAccelerationDisplay.Text = "Theta Acceleration: " + Math.Round(TAcc,7);
