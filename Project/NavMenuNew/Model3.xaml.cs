@@ -64,21 +64,27 @@ namespace NavMenuNew
 
         private void TimerEvent(object sender, EventArgs e)
         {
-            // Calculate desiredD and desiredTheta from desiredX and desiredY
+
 
 
 
             // Calculate PID
-            // set DAcc and TAcc to 0 with !pidActive
-           
+            // set DAcc and TAcc to 0 if !pidActive
+
 
 
 
             // Apply TAcc
             // Cap at 0.314
-            TVel = Math.Min(TVel + TAcc, Math.PI / 10);
-
-
+            if (TVel > 0)
+            {
+                TVel = Math.Min(TVel + TAcc, Math.PI / 10);
+            }
+            else
+            {
+                TVel = Math.Max(TVel + TAcc, -Math.PI / 10);
+            }
+            
 
             // Apply DAcc
             // always positive
@@ -97,17 +103,11 @@ namespace NavMenuNew
 
 
             // Apply DVel
-            
-            
+
+
+
             // Apply Resistance
-            if (TVel > 0)
-            {
-                TVel = 0.98 * TVel;
-            }
-            else if (TVel < 0)
-            {
-                TVel = 0.98 * TVel;
-            }
+            TVel *= 0.98;
 
             if (TVel > 0.25)
             {
@@ -130,16 +130,14 @@ namespace NavMenuNew
             // update Visuals
             Canvas.SetLeft(Car, currentX);
             Canvas.SetTop(Car, currentY);
-            Canvas.SetLeft(Pointer, desiredX);
-            Canvas.SetTop(Pointer, desiredY);
 
             RotateTransform rotateTransform = new RotateTransform(currentTheta);
             Car.RenderTransform = rotateTransform;
 
             DesiredDDisplay.Text = "Desired Distance: " + Math.Round(desiredD,2);
-            DesiredThetaDisplay.Text = "Desired Angle: " + Math.Round(desiredTheta,2);
+            DesiredThetaDisplay.Text = "Desired Angle: " + Math.Round(desiredTheta/Math.PI,2) + " Pi";
             CurrentDDisplay.Text = "Current Distance: " + Math.Round(currentD,2);
-            CurrentThetaDisplay.Text = "Current Angle: " + Math.Round(currentTheta,2);
+            CurrentThetaDisplay.Text = "Current Angle: " + Math.Round(currentTheta/Math.PI,2) +" Pi";
             ThetaVelDisplay.Text = "Theta Velocity: " + Math.Round(TVel,7);
             ThetaAccelerationDisplay.Text = "Theta Acceleration: " + Math.Round(TAcc,7);
             DistanceVelocityDisplay.Text = "Distance Velocity: " + Math.Round(DVel,2);
@@ -197,6 +195,33 @@ namespace NavMenuNew
             Point mousePos = e.GetPosition(largeCanvas);
             desiredX = mousePos.X;
             desiredY = mousePos.Y;
+
+            Canvas.SetLeft(Pointer, desiredX);
+            Canvas.SetTop(Pointer, desiredY);
+
+            // Calculate desiredD and desiredTheta from desiredX and desiredY
+            double deltaX = desiredX - currentX;
+            double deltaY = desiredY - currentY;
+
+
+            desiredD = Math.Sqrt(deltaX*deltaX + deltaY*deltaY);
+
+            if (deltaY >= 0)
+            {
+                desiredTheta = Math.PI - Math.Atan(deltaX / deltaY);
+            }
+            else
+            {
+                if (deltaX >= 0)
+                {
+                    desiredTheta = -Math.Atan(deltaX / deltaY);
+                }
+                else
+                {
+                    desiredTheta = 2*Math.PI - Math.Atan(deltaX / deltaY);
+                }
+            }
+
         }
     }
 }
