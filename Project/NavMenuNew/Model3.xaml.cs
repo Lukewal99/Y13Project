@@ -28,8 +28,8 @@ namespace NavMenuNew
         static int Period = 10; //The loop will run every x milliseconds
         double pidTiming = Convert.ToDouble(Period) / 1000;
 
-        PID.PID anglePID = new PID.PID(100, 0.2);
-        PID.PID distancePID = new PID.PID(400, 0.5);
+        PID.PID anglePID = new PID.PID(500, 0.1);
+        PID.PID distancePID = new PID.PID(4000, 0.5);
 
         private double kP = 0;
         private double kI = 0;
@@ -63,14 +63,38 @@ namespace NavMenuNew
 
         private void TimerEvent(object sender, EventArgs e)
         {
+            // Calculate desiredD and desiredTheta from desiredX and desiredY
+            double deltaX = desiredX - currentX;
+            double deltaY = desiredY - currentY;
+
+
+            desiredD = Math.Sqrt(deltaX * deltaX + deltaY * deltaY);
+
+            if (deltaY >= 0)
+            {
+                desiredTheta = Math.PI - Math.Atan(deltaX / deltaY);
+            }
+            else
+            {
+                if (deltaX >= 0)
+                {
+                    desiredTheta = -Math.Atan(deltaX / deltaY);
+                }
+                else
+                {
+                    desiredTheta = 2 * Math.PI - Math.Atan(deltaX / deltaY);
+                }
+            }
+
             // Calculate PID
             // set DAcc and TAcc to 0 if !pidActive
             if (pidActive) 
             {
+                // DAcc
                 DAcc = distancePID.next(desiredD, 0, kP, kI, kD, (double)Period/1000);
 
                 //TAcc
-
+                TAcc = anglePID.next(desiredTheta, currentTheta, kP, kI, kD, pidTiming);
             }
             else
             {
@@ -80,10 +104,10 @@ namespace NavMenuNew
             }
 
             // Apply TAcc
-            // Cap at 0.314
+            // Cap at 1/20 pi
             if (TVel >= 0)
             {
-                TVel = Math.Min(TVel + TAcc, Math.PI / 10);
+                TVel = Math.Min(TVel + TAcc, Math.PI / 20);
             }
             else
             {
@@ -155,7 +179,7 @@ namespace NavMenuNew
             Canvas.SetLeft(Car, currentX);
             Canvas.SetTop(Car, currentY);
 
-            RotateTransform rotateTransform = new RotateTransform((360*currentTheta/(2*Math.PI) -90)%180);
+            RotateTransform rotateTransform = new RotateTransform(360*currentTheta/(2*Math.PI) -90);
             Car.RenderTransform = rotateTransform;
 
             DesiredDDisplay.Text = "Desired Distance: " + Math.Round(desiredD,2);
@@ -221,29 +245,6 @@ namespace NavMenuNew
 
             Canvas.SetLeft(Pointer, desiredX);
             Canvas.SetTop(Pointer, desiredY);
-
-            // Calculate desiredD and desiredTheta from desiredX and desiredY
-            double deltaX = desiredX - currentX;
-            double deltaY = desiredY - currentY;
-
-
-            desiredD = Math.Sqrt(deltaX*deltaX + deltaY*deltaY);
-
-            if (deltaY >= 0)
-            {
-                desiredTheta = Math.PI - Math.Atan(deltaX / deltaY);
-            }
-            else
-            {
-                if (deltaX >= 0)
-                {
-                    desiredTheta = -Math.Atan(deltaX / deltaY);
-                }
-                else
-                {
-                    desiredTheta = 2*Math.PI - Math.Atan(deltaX / deltaY);
-                }
-            }
 
         }
     }
