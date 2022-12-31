@@ -28,7 +28,7 @@ namespace NavMenuNew
         static int Period = 10; //The loop will run every x milliseconds
         double pidTiming = Convert.ToDouble(Period) / 1000;
 
-        PID.PID anglePID = new PID.PID(1000, 0.1);
+        PID.PID anglePID = new PID.PID(100, 0.2);
         PID.PID distancePID = new PID.PID(400, 0.5);
 
         private double kP = 0;
@@ -67,7 +67,9 @@ namespace NavMenuNew
             // set DAcc and TAcc to 0 if !pidActive
             if (pidActive) 
             {
-                
+                DAcc = distancePID.next(desiredD, 0, kP, kI, kD, (double)Period/1000);
+
+                //TAcc
 
             }
             else
@@ -153,7 +155,7 @@ namespace NavMenuNew
             Canvas.SetLeft(Car, currentX);
             Canvas.SetTop(Car, currentY);
 
-            RotateTransform rotateTransform = new RotateTransform(360*currentTheta/(2*Math.PI) -90);
+            RotateTransform rotateTransform = new RotateTransform((360*currentTheta/(2*Math.PI) -90)%180);
             Car.RenderTransform = rotateTransform;
 
             DesiredDDisplay.Text = "Desired Distance: " + Math.Round(desiredD,2);
