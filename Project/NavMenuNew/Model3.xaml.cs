@@ -65,11 +65,21 @@ namespace NavMenuNew
         {
             // Calculate PID
             // set DAcc and TAcc to 0 if !pidActive
+            if (pidActive) 
+            {
+                
 
+            }
+            else
+            {
+                DAcc = 0;
+                TAcc= 0;
+
+            }
 
             // Apply TAcc
             // Cap at 0.314
-            if (TVel > 0)
+            if (TVel >= 0)
             {
                 TVel = Math.Min(TVel + TAcc, Math.PI / 10);
             }
@@ -91,8 +101,6 @@ namespace NavMenuNew
             {
                 currentTheta = -currentTheta;
             }
-
-            currentTheta = Math.PI/2;
             
             // Apply DVel
             if (currentTheta >= 1.5*Math.PI)
@@ -127,8 +135,12 @@ namespace NavMenuNew
             {
                 TVel = -0.25;
             }
+            else if(-0.001 < TVel && TVel < 0.001)
+            {
+                TVel = 0;
+            }
 
-            if (DVel > 0.1)
+            if (DVel > 0.01)
             {
                 DVel = 0.98 * DVel;
             }
