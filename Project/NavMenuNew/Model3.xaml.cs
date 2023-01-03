@@ -91,10 +91,29 @@ namespace NavMenuNew
             if (pidActive) 
             {
                 // DAcc
-                DAcc = distancePID.next(desiredD, 0, kP, kI, kD, (double)Period/1000);
+                DAcc = distancePID.next(desiredD, 0, kP, kI, kD, pidTiming);
 
                 //TAcc
-                TAcc = anglePID.next(desiredTheta, currentTheta, kP, kI, kD, pidTiming);
+                if (desiredD < 1)
+                {
+                    currentX = desiredX;
+                    currentY = desiredY;
+                    desiredTheta = 0.5*Math.PI;
+                }
+
+                if (0 <= currentTheta && currentTheta <= 0.5 * Math.PI && 1.5 * Math.PI <= desiredTheta && desiredTheta <= 2 * Math.PI)
+                {
+                    TAcc = anglePID.next(desiredTheta, currentTheta + 2 * Math.PI, kP, kI, kD, pidTiming);
+                }
+                else if (0 <= desiredTheta && desiredTheta <= 0.5 * Math.PI && 1.5 * Math.PI <= currentTheta && currentTheta <= 2 * Math.PI)
+                {
+                    TAcc = anglePID.next(desiredTheta + 2 * Math.PI, currentTheta, kP, kI, kD, pidTiming);
+                }
+                else
+                {
+                    TAcc = anglePID.next(desiredTheta, currentTheta, kP, kI, kD, pidTiming);
+                }
+                
             }
             else
             {
@@ -123,9 +142,9 @@ namespace NavMenuNew
 
             // Apply TVel
             currentTheta = (currentTheta + TVel)%(2*Math.PI);
-            if(currentTheta < 0)
+            while(currentTheta < 0)
             {
-                currentTheta = -currentTheta;
+                currentTheta += 2*Math.PI;
             }
             
             // Apply DVel
