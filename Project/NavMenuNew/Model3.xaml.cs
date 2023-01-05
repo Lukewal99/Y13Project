@@ -24,6 +24,7 @@ namespace NavMenuNew
     {
         private DispatcherTimer timer;
 
+        private bool visibility = true;
         private bool pidActive = false;
         static int Period = 10; //The loop will run every x milliseconds
         double pidTiming = Convert.ToDouble(Period) / 1000;
@@ -37,7 +38,7 @@ namespace NavMenuNew
 
         private double currentX = 100;
         private double currentY = 100;
-        private double currentTheta = 0;
+        private double currentTheta = 0.5*Math.PI;
 
         private double desiredX = -10;
         private double desiredY = -10;
@@ -98,6 +99,8 @@ namespace NavMenuNew
                 {
                     currentX = desiredX;
                     currentY = desiredY;
+                    DAcc = 0;
+                    DVel = 0;
                     desiredTheta = 0.5*Math.PI;
                 }
 
@@ -195,11 +198,11 @@ namespace NavMenuNew
             }
 
             // update Visuals
-            Canvas.SetLeft(Car, currentX);
-            Canvas.SetTop(Car, currentY);
+            Canvas.SetLeft(Car, currentX-50);
+            Canvas.SetTop(Car, currentY-31.25);
+            RotateTransform carRotateTransform = new RotateTransform(360 * currentTheta / (2 * Math.PI) - 90);
+            Car.RenderTransform = carRotateTransform;
 
-            RotateTransform rotateTransform = new RotateTransform(360*currentTheta/(2*Math.PI) -90);
-            Car.RenderTransform = rotateTransform;
 
             DesiredDDisplay.Text = "Desired Distance: " + Math.Round(desiredD,2);
             DesiredThetaDisplay.Text = "Desired Angle: " + Math.Round(desiredTheta/Math.PI,2) + " Pi";
@@ -259,12 +262,13 @@ namespace NavMenuNew
         private void largeCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Point mousePos = e.GetPosition(largeCanvas);
-            desiredX = mousePos.X;
-            desiredY = mousePos.Y;
+            desiredX = mousePos.X + 5;
+            desiredY = mousePos.Y + 5;
 
             Canvas.SetLeft(Pointer, desiredX);
             Canvas.SetTop(Pointer, desiredY);
 
         }
+
     }
 }

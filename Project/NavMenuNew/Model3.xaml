@@ -15,13 +15,19 @@
 
         <Canvas Grid.Column="0" Grid.Row="0" x:Name="largeCanvas" Background="White" MouseLeftButtonDown="largeCanvas_MouseLeftButtonDown">
 
-            <Ellipse x:Name="Pointer" Fill="Green" Width="10" Height="10" Canvas.Left="-10" Canvas.Top="-10"/>
-            <Rectangle x:Name="Car" Width="100" Height="56" Canvas.Left="100" Canvas.Top="100" Fill="Red">
+            <Rectangle x:Name="Car" Width="100" Height="62.5" Canvas.Left="50" Canvas.Top="69" RadiusX="0" RadiusY="0" HorizontalAlignment="Left" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5">
                 <Rectangle.RenderTransform>
                     <RotateTransform Angle="0"/>
                 </Rectangle.RenderTransform>
+
+                <Rectangle.Fill>
+                    <!--<SolidColorBrush Color="red"/>-->
+                    <ImageBrush ImageSource="C:\Users\lukew\OneDrive\Documents\GitHub\Project\NavMenuNew\Car.png"/>
+                </Rectangle.Fill>
+
             </Rectangle>
-            <Image x:Name="Car1" Source="/Car.png" Width="100" Height="56" Canvas.Left="100" Canvas.Top="100" />
+
+            <Ellipse x:Name="Pointer" Fill="Green" Width="10" Height="10" Canvas.Left="-10" Canvas.Top="-10"/>
 
             <TextBlock Text="Desired Distance: " Canvas.Top="10" Canvas.Right="10" x:Name="DesiredDDisplay"/>
             <TextBlock Text="Desired Angle: " Canvas.Top="30" Canvas.Right="10" x:Name="DesiredThetaDisplay"/>
@@ -42,7 +48,7 @@
             </Grid.RowDefinitions>
             <Button x:Name="PidActive" Content="PID Active?" Grid.Row="0" Click="PidActive_Click"/>
             <TextBlock x:Name="PidActiveDisplay" Text="False" Grid.Row="1" HorizontalAlignment="Center" Foreground="Red"/>
-            <Button x:Name="GoBack" Content="Go Back" Grid.Row="3" Click="GoBack_Click" />
+            <Button x:Name="GoBack" Content="Go Back" Grid.Row="4" Click="GoBack_Click" />
 
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
