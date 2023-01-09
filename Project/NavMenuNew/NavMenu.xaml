@@ -7,8 +7,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-
-        <Grid Height="450" Width="800" HorizontalAlignment="Center" VerticalAlignment="Top">
+        <Grid Height="450" Width="850" HorizontalAlignment="Center" VerticalAlignment="Top">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="100"/>
                 <ColumnDefinition Width="*"/>
@@ -22,11 +21,22 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <TextBlock Text="PID" FontSize="50" FontFamily="Times New Roman" FontWeight="Black" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            <TextBlock Text="PID" FontSize="50" Foreground="DarkOrange" FontFamily="Times New Roman" FontWeight="Black" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <Button x:Name="ModelOne" Content="MODEL 1: ROTATION" Grid.Column="1" Grid.Row="1" Click="ModelOne_Click" />
             <Button x:Name="ModelTwo" Content="MODEL 2: POSITION" Grid.Column="2" Grid.Row="1" Click="ModelTwo_Click"/>
             <Button x:Name="ModelThree" Content="MODEL 3: VELOCITY" Grid.Column="3" Grid.Row="1" Click="ModelThree_Click"/>
 
+            <Canvas>
+                <TextBlock Text="PID is a closed feedback loop using Proportional, Integral, and Derivative calculation, designed to meet a numerical goal without overshooting." Canvas.Top="310" Height="25" Width="840" HorizontalAlignment="Center" Canvas.Left="9" VerticalAlignment="Top" TextAlignment="Center"/>
+                <TextBlock Text="P = Err * kP   /   I = kI * Err * Δt   /   D = kd * (Err – pErr) ÷ Δt" Canvas.Top="335" Height="25" Width="350" HorizontalAlignment="Center" Canvas.Left="9" VerticalAlignment="Top" TextAlignment="Center"/>
+                <TextBlock Text="It = It + I" Canvas.Top="350" Height="25" Width="350" HorizontalAlignment="Center" Canvas.Left="9" VerticalAlignment="Top" TextAlignment="Center"/>
+                <TextBlock Text="Output = P + It + D" Canvas.Top="375" Height="25" Width="350" HorizontalAlignment="Center" Canvas.Left="9" VerticalAlignment="Top" TextAlignment="Center"/>
+                <TextBlock Text="However, it isn’t always perfect. PID controller tuning is a fine and delicate process, where the kP, kI and"  Canvas.Top="400" Height="25" HorizontalAlignment="Center" Canvas.Left="9" VerticalAlignment="Top" TextAlignment="Center" Width="845"/>
+                <TextBlock Text="kD values need to be at the right ratio to each other, and the right scale compared to your PV and SP." Canvas.Top="415" Height="25" HorizontalAlignment="Center" Canvas.Left="9" VerticalAlignment="Top" TextAlignment="Center" Width="845"/>
+                <TextBlock Text="Proportional will accelerate towards the Set Point proportionally to the Error." Canvas.Top="335" Height="55" Width="475" Canvas.Left="364" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                <TextBlock Text="Integral will increase acceleration the longer it takes to reach the Set Point." Canvas.Top="350" Height="55" Width="475" Canvas.Left="364" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                <TextBlock Text="Derrivative will try and deccelerate before it crosses the Set Point, and stop on point." Canvas.Top="365" Height="55" Width="475" Canvas.Left="364" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+            </Canvas>
         </Grid>
 
     </Grid>
