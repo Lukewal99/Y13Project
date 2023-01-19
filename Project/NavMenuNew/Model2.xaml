@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="NavMenuNew.Model2"
+﻿<local:GenericModel x:Class="NavMenuNew.Model2"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -52,7 +52,7 @@
             <Button x:Name="PidActive" Content="PID Active?" Grid.Row="0" Click="PidActive_Click"/>
             <TextBlock x:Name="PidActiveDisplay" Text="False" Grid.Row="1" HorizontalAlignment="Center" Foreground="Red"/>
             <Button x:Name="GoBack" Content="Go Back" Grid.Row="3" Click="GoBack_Click" />
-            
+
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -79,4 +79,4 @@
 
 
     </Grid>
-</UserControl>
+</local:GenericModel>

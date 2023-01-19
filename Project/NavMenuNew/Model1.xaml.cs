@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NavMenuNew;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,24 +20,11 @@ namespace NavMenuNew
     /// <summary>
     /// Interaction logic for Model1.xaml
     /// </summary>
-    public partial class Model1 : UserControl
+    public partial class Model1 : GenericModel
     {
 
 
-        private DispatcherTimer timer;
-        private double currentRotation = 0;
-        private double currentRotVel = 0;
-        private double appliedRotAcc = 0;
-        private double pidRotAcc = 0;
-        private bool pidActive = false;
-        private int Period = 10; //The loop will run every x milliseconds
-
         PID.PID PID = new PID.PID(250, 0.5);
-
-        private double kP = 0;
-        private double kI = 0;
-        private double kD = 0;
-
 
         public Model1()
         {
@@ -44,6 +32,7 @@ namespace NavMenuNew
 
 
             timer = new DispatcherTimer();
+            pidTiming = Period / 1000F;
             //timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
             timer.Interval = new TimeSpan(0, 0, 0, 0, Period);
             timer.Tick += TimerEvent;
@@ -54,9 +43,7 @@ namespace NavMenuNew
 
             if (pidActive)
             {
-
-                //pidOutput = PID.next(0,currentRotation,kP,kI,kD,0.01);
-                double pidTiming = Period / 1000F;
+              
                 pidRotAcc = PID.next(0, currentRotation, kP, kI, kD, pidTiming);
 
             }

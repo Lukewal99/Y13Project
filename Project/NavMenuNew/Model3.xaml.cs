@@ -20,21 +20,12 @@ namespace NavMenuNew
     /// <summary>
     /// Interaction logic for Model3.xaml
     /// </summary>
-    public partial class Model3 : UserControl
+    public partial class Model3 : GenericModel
     {
-        private DispatcherTimer timer;
-
-        private bool visibility = true;
-        private bool pidActive = false;
-        static int Period = 10; //The loop will run every x milliseconds
-        double pidTiming = Convert.ToDouble(Period) / 1000;
 
         PID.PID anglePID = new PID.PID(500, 0.1);
         PID.PID distancePID = new PID.PID(4000, 0.5);
 
-        private double kP = 0;
-        private double kI = 0;
-        private double kD = 0;
 
         private double currentX = 100;
         private double currentY = 100;
@@ -57,6 +48,7 @@ namespace NavMenuNew
             InitializeComponent();
 
             timer = new DispatcherTimer();
+            pidTiming = Period / 1000F;
             timer.Interval = new TimeSpan(0, 0, 0, 0, Period);
             timer.Tick += TimerEvent;
             timer.Start();

@@ -19,7 +19,7 @@ namespace NavMenuNew
     /// <summary>
     /// Interaction logic for Model2.xaml
     /// </summary>
-    public partial class Model2 : UserControl
+    public partial class Model2 : GenericModel
     {
         private DispatcherTimer timer;
 
@@ -49,6 +49,7 @@ namespace NavMenuNew
             InitializeComponent();
 
             timer = new DispatcherTimer();
+            pidTiming = Period / 1000F;
             timer.Interval = new TimeSpan(0, 0, 0, 0, Period);
             timer.Tick += TimerEvent;
             timer.Start();
