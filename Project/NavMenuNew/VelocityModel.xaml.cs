@@ -26,21 +26,11 @@ namespace NavMenuNew
         PID.PID anglePID = new PID.PID(500, 0.1);
         PID.PID distancePID = new PID.PID(4000, 0.5);
 
+        public double currentX = 100;
+        public double currentY = 100;
+        public double desiredX = -10;
+        public double desiredY = -10;
 
-        private double currentX = 100;
-        private double currentY = 100;
-        private double currentTheta = 0.5*Math.PI;
-
-        private double desiredX = -10;
-        private double desiredY = -10;
-
-        private double DVel = 0;
-        private double DAcc = 0;
-        private double TVel = 0;
-        private double TAcc = 0;
-
-        private double desiredD = 0;
-        private double desiredTheta = 0;
 
 
         public Model3()

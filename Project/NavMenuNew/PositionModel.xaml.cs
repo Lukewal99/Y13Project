@@ -21,28 +21,12 @@ namespace NavMenuNew
     /// </summary>
     public partial class Model2 : GenericModel
     {
-        private DispatcherTimer timer;
-
-        private bool pidActive = false;
-        static int Period = 10; //The loop will run every x milliseconds
-        double pidTiming = Convert.ToDouble(Period) / 1000;
 
         PID.PID anglePID = new PID.PID(1000, 0.1);
         PID.PID distancePID = new PID.PID(400, 0.5);
 
-        private double kP = 0;
-        private double kI = 0;
-        private double kD = 0;
 
-        private double desiredD = 100;
-        private double desiredTheta = Math.PI / 2;
 
-        private double currentD = 0;
-        private double currentTheta = 0;
-        private double currentDVel = 0;
-        private double currentDAcc = 0;
-        private double currentThetaVel = 0;
-        private double currentThetaAcc = 0;
 
         public Model2()
         {
@@ -60,100 +44,100 @@ namespace NavMenuNew
         {
             if (pidActive)
             {
-                currentDAcc = distancePID.next(desiredD, currentD, kP, kI, kD, pidTiming);
+                DAcc = distancePID.next(desiredD, currentD, kP, kI, kD, pidTiming);
 
                 if (currentTheta < desiredTheta - Math.PI)
                 {
-                    currentThetaAcc = anglePID.next(desiredTheta - 2 * Math.PI, currentTheta, kP, kI, kD, pidTiming);
+                    TAcc = anglePID.next(desiredTheta - 2 * Math.PI, currentTheta, kP, kI, kD, pidTiming);
                 }
                 else if (currentTheta - Math.PI > desiredTheta)
                 {
-                    currentThetaAcc = anglePID.next(desiredTheta, currentTheta - 2 * Math.PI, kP, kI, kD, pidTiming);
+                    TAcc = anglePID.next(desiredTheta, currentTheta - 2 * Math.PI, kP, kI, kD, pidTiming);
                 }
                 else
                 {
-                    currentThetaAcc = anglePID.next(desiredTheta, currentTheta, kP, kI, kD, pidTiming);
+                    TAcc = anglePID.next(desiredTheta, currentTheta, kP, kI, kD, pidTiming);
                 }
 
             }
             else
             {
-                currentDAcc = 0;
-                currentThetaAcc = 0;
+                DAcc = 0;
+                TAcc = 0;
             }
 
-            currentThetaVel = Math.Min(currentThetaVel + currentThetaAcc, Math.PI / 10);
+            TVel = Math.Min(TVel + TAcc, Math.PI / 10);
 
-            if (currentDVel + currentDAcc > 0)
+            if (DVel + DAcc > 0)
             {
-                currentDVel = Math.Min(currentDVel + currentDAcc, 2);
+                DVel = Math.Min(DVel + DAcc, 2);
             }
             else
             {
-                currentDVel = Math.Max(currentDVel + currentDAcc, -2);
+                DVel = Math.Max(DVel + DAcc, -2);
             }
 
-            currentTheta = (currentTheta + currentThetaVel);
+            currentTheta = (currentTheta + TVel);
             while (currentTheta < 0)
             {
                 currentTheta += 2 * Math.PI;
             }
 
-            currentD = Math.Min(Math.Abs(currentD + currentDVel), 200);
+            currentD = Math.Min(Math.Abs(currentD + DVel), 200);
 
 
 
             if (Math.Abs(currentD) == 200)
             {
-                currentDVel = 0;
+                DVel = 0;
             }
 
 
 
 
-            if (currentThetaVel > 0)
+            if (TVel > 0)
             {
-                currentThetaVel = 0.98 * currentThetaVel;
+                TVel = 0.98 * TVel;
             }
-            else if (currentThetaVel < 0)
+            else if (TVel < 0)
             {
-                currentThetaVel = 0.98 * currentThetaVel;
+                TVel = 0.98 * TVel;
             }
-            else if (currentThetaVel < 0.01 && currentThetaVel > -0.01)
+            else if (TVel < 0.01 && TVel > -0.01)
             {
-                currentThetaVel = 0;
-            }
-
-            if (currentThetaVel > 0.25)
-            {
-                currentThetaVel = 0.25;
-            }
-            else if (currentThetaVel < -0.25)
-            {
-                currentThetaVel = -0.25;
+                TVel = 0;
             }
 
-            if (currentDVel > 0.1)
+            if (TVel > 0.25)
             {
-                currentDVel = 0.98 * currentDVel;
+                TVel = 0.25;
             }
-            else if (currentDVel < -0.1)
+            else if (TVel < -0.25)
             {
-                currentDVel = 0.98 * currentDVel;
+                TVel = -0.25;
+            }
+
+            if (DVel > 0.1)
+            {
+                DVel = 0.98 * DVel;
+            }
+            else if (DVel < -0.1)
+            {
+                DVel = 0.98 * DVel;
             }
             else
             {
-                currentDVel = 0;
+                DVel = 0;
             }
 
             DesiredThetaDisplay.Text = "Desired Angle: " + Convert.ToString(Math.Round(desiredTheta, 2));
             DesiredDDisplay.Text = "Desired Distance: " + Convert.ToString(Math.Round(desiredD, 2));
             CurrentThetaDisplay.Text = "Current Angle: " + Convert.ToString(Math.Round(currentTheta, 2));
             CurrentDDisplay.Text = "Current Distance: " + Convert.ToString(Math.Round(currentD, 2));
-            ThetaVelDisplay.Text = "Theta Velocity: " + Convert.ToString(Math.Round(currentThetaVel, 3));
-            ThetaAccelerationDisplay.Text = "Theta Acceleration: " + Convert.ToString(Math.Round(currentThetaAcc, 4));
-            DistanceVelocityDisplay.Text = "Distance Velocity: " + Convert.ToString(Math.Round(currentDVel, 3));
-            DistanceAccelerationDisplay.Text = "Distance Acceleration: " + Convert.ToString(Math.Round(currentDAcc, 4));
+            ThetaVelDisplay.Text = "Theta Velocity: " + Convert.ToString(Math.Round(TVel, 3));
+            ThetaAccelerationDisplay.Text = "Theta Acceleration: " + Convert.ToString(Math.Round(TAcc, 4));
+            DistanceVelocityDisplay.Text = "Distance Velocity: " + Convert.ToString(Math.Round(DVel, 3));
+            DistanceAccelerationDisplay.Text = "Distance Acceleration: " + Convert.ToString(Math.Round(DAcc, 4));
 
             //Sets a pointer position to the current desired location
             Canvas.SetLeft(pointer, Canvas.GetLeft(topDownBase) + topDownBase.Width / 2 - pointer.Width / 2 + desiredD * Math.Cos(desiredTheta));

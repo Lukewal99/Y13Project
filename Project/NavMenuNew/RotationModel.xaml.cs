@@ -22,8 +22,8 @@ namespace NavMenuNew
     /// </summary>
     public partial class Model1 : GenericModel
     {
-
-
+        public double appliedRotAcc = 0;
+        public double pidRotAcc = 0;
         PID.PID PID = new PID.PID(250, 0.5);
 
         public Model1()
@@ -44,7 +44,7 @@ namespace NavMenuNew
             if (pidActive)
             {
               
-                pidRotAcc = PID.next(0, currentRotation, kP, kI, kD, pidTiming);
+                pidRotAcc = PID.next(0, currentTheta, kP, kI, kD, pidTiming);
 
             }
             else
@@ -52,27 +52,27 @@ namespace NavMenuNew
                 pidRotAcc = 0;
             }
 
-            currentRotVel = currentRotVel + appliedRotAcc + pidRotAcc;
+            TVel = TVel + appliedRotAcc + pidRotAcc;
 
-            currentRotation = (currentRotation + currentRotVel) % 180;
+            currentTheta = (currentTheta + TVel) % 180;
 
-            RotateTransform rotateTransform = new RotateTransform(currentRotation);
+            RotateTransform rotateTransform = new RotateTransform(currentTheta);
             Rectangle.RenderTransform = rotateTransform;
 
-            if (currentRotVel > 0.1)
+            if (TVel > 0.1)
             {
-                currentRotVel -= 0.05;
+                TVel -= 0.05;
             }
-            else if (currentRotVel < -0.1)
+            else if (TVel < -0.1)
             {
-                currentRotVel += 0.05;
+                TVel += 0.05;
             }
             else
             {
-                currentRotVel = 0;
+                TVel = 0;
             }
-            AngleDisplay.Text = "Angle: " + Math.Round(currentRotation, 3);
-            RotVelDisplay.Text = "RotVel: " + Math.Round(currentRotVel, 3);
+            AngleDisplay.Text = "Angle: " + Math.Round(currentTheta, 3);
+            RotVelDisplay.Text = "RotVel: " + Math.Round(TVel, 3);
             PidAccDisplay.Text = "PidAcc: " + Math.Round(pidRotAcc, 3);
             AppliedAccDisplay.Text = "AppliedAcc: " + Math.Round(appliedRotAcc, 3);
         }
@@ -137,8 +137,8 @@ namespace NavMenuNew
             }
             else if (e.Key == Key.D0)
             {
-                currentRotation = 0;
-                currentRotVel = 0;
+                currentTheta = 0;
+                TVel = 0;
                 pidRotAcc = 0;
                 PID.It = 0;
                 pidActive = false;
