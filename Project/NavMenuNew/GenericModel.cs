@@ -6,12 +6,16 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Threading;
 using NavMenuNew;
+using GraphControl;
 
 namespace NavMenuNew
 {
     public class GenericModel : UserControl
     {
+        // Define Variables
         public DispatcherTimer timer;
+        public Graph graph;
+        public UserControl GraphControl = new Graph();
 
         public double desiredD = 0;
         public double desiredTheta = Math.PI / 2;

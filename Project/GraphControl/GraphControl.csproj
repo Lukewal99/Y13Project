@@ -1,15 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>WinExe</OutputType>
     <TargetFramework>net6.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\GraphControl\GraphControl.csproj" />
-    <ProjectReference Include="..\PID\PID.csproj" />
-  </ItemGroup>
 
 </Project>

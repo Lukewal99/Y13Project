@@ -30,6 +30,7 @@ namespace NavMenuNew
 
         private void ModelOne_Click(object sender, RoutedEventArgs e)
         {
+            // Change to Model One
             Model = new Model1();
             Canvas.SetLeft(Model, 0);
             Canvas.SetTop(Model, 0);
@@ -41,6 +42,7 @@ namespace NavMenuNew
 
         private void ModelTwo_Click(object sender, RoutedEventArgs e)
         {
+            // Change to Model Two
             Model = new Model2();
             Canvas.SetLeft(Model, 0);
             Canvas.SetTop(Model, 0);
@@ -52,6 +54,7 @@ namespace NavMenuNew
 
         private void ModelThree_Click(object sender, RoutedEventArgs e)
         {
+            // Change to Model Three
             Model = new Model3();
             Canvas.SetLeft(Model, 0);
             Canvas.SetTop(Model, 0);

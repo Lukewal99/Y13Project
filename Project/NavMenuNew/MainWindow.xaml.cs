@@ -23,6 +23,7 @@ namespace NavMenuNew
         UserControl Model;
         public MainWindow()
         {
+            // Create the Nav Menu and set the canvas to it
             InitializeComponent();
             Model = new NavMenu();
             Canvas.SetLeft(Model, 0);

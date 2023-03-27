@@ -22,7 +22,7 @@ namespace NavMenuNew
     /// </summary>
     public partial class Model3 : GenericModel
     {
-
+        //define variables
         PID.PID anglePID = new PID.PID(500, 0.1);
         PID.PID distancePID = new PID.PID(4000, 0.5);
 
@@ -36,7 +36,7 @@ namespace NavMenuNew
         public Model3()
         {
             InitializeComponent();
-
+            // Create the timer event
             timer = new DispatcherTimer();
             pidTiming = Period / 1000F;
             timer.Interval = new TimeSpan(0, 0, 0, 0, Period);
@@ -62,6 +62,7 @@ namespace NavMenuNew
                 if (deltaX >= 0)
                 {
                     desiredTheta = -Math.Atan(deltaX / deltaY);
+                    
                 }
                 else
                 {
@@ -86,6 +87,7 @@ namespace NavMenuNew
                     desiredTheta = 0.5*Math.PI;
                 }
 
+                // edge cases for crossing 0
                 if (0 <= currentTheta && currentTheta <= 0.5 * Math.PI && 1.5 * Math.PI <= desiredTheta && desiredTheta <= 2 * Math.PI)
                 {
                     TAcc = anglePID.next(desiredTheta, currentTheta + 2 * Math.PI, kP, kI, kD, pidTiming);
@@ -106,6 +108,11 @@ namespace NavMenuNew
                 TAcc= 0;
 
             }
+
+            // Update Graph
+            graph.addPoint(desiredD, currentD, DAcc);
+            graph.updateGraph(Period);
+
 
             // Apply TAcc
             // Cap at 1/20 pi
@@ -133,22 +140,22 @@ namespace NavMenuNew
             }
             
             // Apply DVel
-            if (currentTheta >= 1.5*Math.PI)
+            if (currentTheta >= 1.5*Math.PI) // Apply North - West
             {
                 currentX -= DVel*Math.Cos(currentTheta-1.5*Math.PI);
                 currentY -= DVel*Math.Sin(currentTheta-1.5*Math.PI);
             }
-            else if(currentTheta >= Math.PI)
+            else if(currentTheta >= Math.PI) // Apply South - West
             {
                 currentX -= DVel * Math.Sin(currentTheta - Math.PI);
                 currentY += DVel * Math.Cos(currentTheta - Math.PI);
             }
-            else if (currentTheta >= 0.5 * Math.PI)
+            else if (currentTheta >= 0.5 * Math.PI) // Apply South - East
             {
                 currentX += DVel * Math.Cos(currentTheta - 0.5 * Math.PI);
                 currentY += DVel * Math.Sin(currentTheta - 0.5 * Math.PI);
             }
-            else
+            else // Apply North - East
             {
                 currentX += DVel * Math.Cos(currentTheta);
                 currentY -= DVel * Math.Sin(currentTheta);
@@ -159,15 +166,15 @@ namespace NavMenuNew
 
             if (TVel > 0.25)
             {
-                TVel = 0.25;
+                TVel = 0.25; // Maximum
             }   
             else if (TVel < -0.25)
             {
-                TVel = -0.25;
+                TVel = -0.25; // -Maximum
             }
             else if(-0.001 < TVel && TVel < 0.001)
             {
-                TVel = 0;
+                TVel = 0; // Approaching Zero
             }
 
             if (DVel > 0.01)
@@ -176,12 +183,13 @@ namespace NavMenuNew
             }
             else
             {
-                DVel = 0;
+                DVel = 0; // Approaching Zero
             }
 
             // update Visuals
             Canvas.SetLeft(Car, currentX-50);
             Canvas.SetTop(Car, currentY-31.25);
+            // Rotate the Car
             RotateTransform carRotateTransform = new RotateTransform(360 * currentTheta / (2 * Math.PI) - 90);
             Car.RenderTransform = carRotateTransform;
 
@@ -197,28 +205,32 @@ namespace NavMenuNew
 
         private void PSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            // P Changed
             kP = Math.Round(Convert.ToDouble(PSlider.Value), 2);
             PValue.Text = Convert.ToString(kP);
         }
 
         private void ISlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            // I Changed
             kI = Math.Round(Convert.ToDouble(ISlider.Value), 2);
             IValue.Text = Convert.ToString(kI);
         }
 
         private void DSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            // D Changed
             kD = Math.Round(Convert.ToDouble(DSlider.Value), 2);
             DValue.Text = Convert.ToString(kD);
         }
 
         private void PidActive_Click(object sender, RoutedEventArgs e)
         {
+            // Flip pidActive
             pidActive = !pidActive;
             PidActiveDisplay.Text = Convert.ToString(pidActive);
 
-            if (pidActive)
+            if (pidActive) // Update UI
             {
                 PidActiveDisplay.Foreground = new SolidColorBrush(Color.FromRgb(0, 185, 0));
                 anglePID.It = 0;
@@ -232,6 +244,7 @@ namespace NavMenuNew
 
         private void GoBack_Click(object sender, RoutedEventArgs e)
         {
+            // Go back to NavMenu
             UserControl Model = new NavMenu();
             Canvas.SetLeft(Model, 0);
             Canvas.SetTop(Model, 0);
@@ -243,6 +256,7 @@ namespace NavMenuNew
 
         private void largeCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            // Set Desired X/Y
             Point mousePos = e.GetPosition(largeCanvas);
             desiredX = mousePos.X + 5;
             desiredY = mousePos.Y + 5;

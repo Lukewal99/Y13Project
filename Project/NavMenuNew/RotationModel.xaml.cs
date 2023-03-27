@@ -22,6 +22,7 @@ namespace NavMenuNew
     /// </summary>
     public partial class Model1 : GenericModel
     {
+        // Define variables
         public double appliedRotAcc = 0;
         public double pidRotAcc = 0;
         PID.PID PID = new PID.PID(250, 0.5);
@@ -30,20 +31,20 @@ namespace NavMenuNew
         {
             InitializeComponent();
 
-
+            // Set up timer event
             timer = new DispatcherTimer();
             pidTiming = Period / 1000F;
-            //timer.Interval = new TimeSpan(0, 0, 0, 0, 10);
             timer.Interval = new TimeSpan(0, 0, 0, 0, Period);
             timer.Tick += TimerEvent;
             timer.Start();
         }
         private void TimerEvent(object sender, EventArgs e)
         {
-
+            // Calculate PID
+            // set TAcc to 0 if !pidActive
             if (pidActive)
             {
-              
+
                 pidRotAcc = PID.next(0, currentTheta, kP, kI, kD, pidTiming);
 
             }
@@ -52,13 +53,19 @@ namespace NavMenuNew
                 pidRotAcc = 0;
             }
 
-            TVel = TVel + appliedRotAcc + pidRotAcc;
+            // Update graph
+            graph.addPoint(0, currentTheta, pidRotAcc);
+            graph.updateGraph(Period);
 
+            // Update Angle
+            TVel = TVel + appliedRotAcc + pidRotAcc;
             currentTheta = (currentTheta + TVel) % 180;
 
+            // Update rotation on the UI
             RotateTransform rotateTransform = new RotateTransform(currentTheta);
             Rectangle.RenderTransform = rotateTransform;
-
+    
+            // Apply resistance
             if (TVel > 0.1)
             {
                 TVel -= 0.05;
@@ -79,10 +86,11 @@ namespace NavMenuNew
 
         private void PidActive_Click(object sender, RoutedEventArgs e)
         {
+            // Flip pidActive
             pidActive = !pidActive;
             PidActiveDisplay.Text = Convert.ToString(pidActive);
 
-            if (pidActive)
+            if (pidActive) // Update UI
             {
                 PidActiveDisplay.Foreground = new SolidColorBrush(Color.FromRgb(0, 185, 0));
                 PID.It = 0;
@@ -98,24 +106,28 @@ namespace NavMenuNew
 
         private void PSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            // P Changed
             kP = Math.Round(Convert.ToDouble(PSlider.Value), 2);
             PValue.Text = Convert.ToString(kP);
         }
 
         private void ISlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            // I Changed
             kI = Math.Round(Convert.ToDouble(ISlider.Value), 3);
             IValue.Text = Convert.ToString(kI);
         }
 
         private void DSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            // D Changed
             kD = Math.Round(Convert.ToDouble(DSlider.Value), 4);
             DValue.Text = Convert.ToString(kD);
         }
 
         private void GoBack_Click(object sender, RoutedEventArgs e)
         {
+            // Go back to NavMenu
             UserControl Model = new NavMenu();
             Canvas.SetLeft(Model, 0);
             Canvas.SetTop(Model, 0);
@@ -127,6 +139,8 @@ namespace NavMenuNew
 
         private void Grid_KeyDown(object sender, KeyEventArgs e)
         {
+            // detect key down
+            // check what key and apply the required effect
             if (e.Key == Key.Left)
             {
                 appliedRotAcc = -0.2;
@@ -150,6 +164,7 @@ namespace NavMenuNew
 
         private void Grid_KeyUp(object sender, KeyEventArgs e)
         {
+            // undo effects of keyDown
             if (e.Key == Key.Left || e.Key == Key.Right)
             {
                 appliedRotAcc = 0;

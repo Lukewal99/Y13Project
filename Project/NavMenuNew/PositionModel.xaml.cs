@@ -21,17 +21,14 @@ namespace NavMenuNew
     /// </summary>
     public partial class Model2 : GenericModel
     {
-
+        // Define variables
         PID.PID anglePID = new PID.PID(1000, 0.1);
         PID.PID distancePID = new PID.PID(400, 0.5);
-
-
-
 
         public Model2()
         {
             InitializeComponent();
-
+            // Create the timer event
             timer = new DispatcherTimer();
             pidTiming = Period / 1000F;
             timer.Interval = new TimeSpan(0, 0, 0, 0, Period);
@@ -42,10 +39,14 @@ namespace NavMenuNew
 
         private void TimerEvent(object sender, EventArgs e)
         {
+            // Calculate PID
+            // set DAcc and TAcc to 0 if !pidActive
             if (pidActive)
             {
+                //DAcc
                 DAcc = distancePID.next(desiredD, currentD, kP, kI, kD, pidTiming);
 
+                //TAcc
                 if (currentTheta < desiredTheta - Math.PI)
                 {
                     TAcc = anglePID.next(desiredTheta - 2 * Math.PI, currentTheta, kP, kI, kD, pidTiming);
@@ -66,8 +67,17 @@ namespace NavMenuNew
                 TAcc = 0;
             }
 
+            // Update graph
+            graph.addPoint(desiredD, currentD, DAcc);
+            graph.updateGraph(Period);
+
+            // Apply TAcc
+            // Cap at 1/20 pi
             TVel = Math.Min(TVel + TAcc, Math.PI / 10);
 
+            // Apply DAcc
+            // always positive
+            // Cap at 2
             if (DVel + DAcc > 0)
             {
                 DVel = Math.Min(DVel + DAcc, 2);
@@ -77,16 +87,15 @@ namespace NavMenuNew
                 DVel = Math.Max(DVel + DAcc, -2);
             }
 
+            // Apply TVel
             currentTheta = (currentTheta + TVel);
             while (currentTheta < 0)
             {
                 currentTheta += 2 * Math.PI;
             }
 
+            // Apply DVel
             currentD = Math.Min(Math.Abs(currentD + DVel), 200);
-
-
-
             if (Math.Abs(currentD) == 200)
             {
                 DVel = 0;
@@ -94,7 +103,7 @@ namespace NavMenuNew
 
 
 
-
+            // Apply Resistance
             if (TVel > 0)
             {
                 TVel = 0.98 * TVel;
@@ -130,6 +139,7 @@ namespace NavMenuNew
                 DVel = 0;
             }
 
+            //Update UI
             DesiredThetaDisplay.Text = "Desired Angle: " + Convert.ToString(Math.Round(desiredTheta, 2));
             DesiredDDisplay.Text = "Desired Distance: " + Convert.ToString(Math.Round(desiredD, 2));
             CurrentThetaDisplay.Text = "Current Angle: " + Convert.ToString(Math.Round(currentTheta, 2));
@@ -163,30 +173,34 @@ namespace NavMenuNew
             //sideOnArmTwo.Y2 Doesnt change
         }
 
-        private void PSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+              private void PSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            // P Changed
             kP = Math.Round(Convert.ToDouble(PSlider.Value), 2);
             PValue.Text = Convert.ToString(kP);
         }
 
         private void ISlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            // I Changed
             kI = Math.Round(Convert.ToDouble(ISlider.Value), 2);
             IValue.Text = Convert.ToString(kI);
         }
 
         private void DSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
+            // D Changed
             kD = Math.Round(Convert.ToDouble(DSlider.Value), 2);
             DValue.Text = Convert.ToString(kD);
         }
 
         private void PidActive_Click(object sender, RoutedEventArgs e)
         {
+            // Flip pidActive
             pidActive = !pidActive;
             PidActiveDisplay.Text = Convert.ToString(pidActive);
 
-            if (pidActive)
+            if (pidActive) // Update UI
             {
                 PidActiveDisplay.Foreground = new SolidColorBrush(Color.FromRgb(0, 185, 0));
                 anglePID.It = 0;
@@ -194,19 +208,33 @@ namespace NavMenuNew
             }
             else if (!pidActive)
             {
-
                 PidActiveDisplay.Foreground = new SolidColorBrush(Color.FromRgb(255, 0, 0));
             }
         }
 
+        private void GoBack_Click(object sender, RoutedEventArgs e)
+        {
+            // Go back to NavMenu
+            UserControl Model = new NavMenu();
+            Canvas.SetLeft(Model, 0);
+            Canvas.SetTop(Model, 0);
+
+            Canvas MainCanvas = (Canvas)this.Parent;
+            MainCanvas.Children.Clear();
+            MainCanvas.Children.Add(Model);
+        }
+
         private void Range_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            //Detect click in range
             Point mousePos = e.GetPosition(Range);
             double x = mousePos.X - 200;
             double y = mousePos.Y - 200;
 
+            // Set desired D
             desiredD = Math.Min(Math.Sqrt(x * x + y * y), 200);
 
+            // set desired Theta
             if (x >= 0)
             {
                 if (y >= 0)
@@ -227,15 +255,5 @@ namespace NavMenuNew
             DesiredThetaDisplay.Text = "Desired Angle: " + Convert.ToString(Math.Round(desiredTheta, 2));
         }
 
-        private void GoBack_Click(object sender, RoutedEventArgs e)
-        {
-            UserControl Model = new NavMenu();
-            Canvas.SetLeft(Model, 0);
-            Canvas.SetTop(Model, 0);
-
-            Canvas MainCanvas = (Canvas)this.Parent;
-            MainCanvas.Children.Clear();
-            MainCanvas.Children.Add(Model);
-        }
     }
 }
