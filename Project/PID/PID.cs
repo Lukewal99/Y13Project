@@ -30,6 +30,10 @@ namespace PID
             // I
             double I = kI * Error * timeSinceLastUpdate;
             this.It += I;
+            if(kI == 0)
+            {
+                It= 0;
+            }
 
             // D
             double D = kD * (Error - PreviousError) / timeSinceLastUpdate;

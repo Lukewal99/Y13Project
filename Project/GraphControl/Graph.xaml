@@ -5,21 +5,22 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GraphControl"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
+             d:DesignHeight="450" d:DesignWidth="700">
+   <!-- <Canvas Height="450" Width="700" Background="Black"> -->
+    <Grid Background="Black" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="80"/>
-            <ColumnDefinition Width="720"/>
+            <ColumnDefinition Width="620"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="370"/>
             <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
         
-        <Canvas x:Name="GraphCanvas" Background="White" Grid.Column="1" Grid.Row="0" Margin="5">
+        <Canvas x:Name="InGraphCanvas" Background="White" Grid.Column="1" Grid.Row="0">
             
         </Canvas>
-        <Canvas x:Name="YAxis" Background="White" Grid.Column="0" Grid.Row="0">
+       <!-- <Canvas x:Name="YAxis" Background="White" Grid.Column="0" Grid.Row="0">
 
         </Canvas>
         <Canvas x:Name="XAxis" Background="White" Grid.Column="1" Grid.Row="1">
@@ -27,6 +28,7 @@
         </Canvas>
         <Canvas Background="White" Grid.Column="0" Grid.Row="1">
 
-        </Canvas>
+        </Canvas>-->
     </Grid>
+    <!--</Canvas>-->
 </UserControl>

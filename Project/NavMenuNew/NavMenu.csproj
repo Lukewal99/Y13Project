@@ -8,7 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GraphControl\GraphControl.csproj" />
     <ProjectReference Include="..\PID\PID.csproj" />
   </ItemGroup>
 

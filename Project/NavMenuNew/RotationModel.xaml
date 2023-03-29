@@ -28,17 +28,31 @@
                 </Rectangle.RenderTransform>
             </Rectangle>
         </Canvas>
+        <Canvas Grid.Column="0" Grid.Row="0" x:Name="GraphCanvas" Background="White" Visibility="Hidden"/>
+        <Canvas Grid.Column="0" Grid.Row="0" x:Name="KeyCanvas" Background="Transparent" Visibility="Hidden">
+            <TextBlock x:Name="SetPoint" Text="0.0" Canvas.Top="400" Canvas.Left="20"/>
+            <TextBlock x:Name="ProcessVariable" Text="0.0" Canvas.Top="415" Canvas.Left="20"/>
+            <TextBlock x:Name="AppliecAcceleration" Text="0.0" Canvas.Top="430" Canvas.Left="20"/>
+            <Rectangle Fill="Black" Height="10" Width="10" Canvas.Top="403" Canvas.Left="50"/>
+            <Rectangle Fill="Red" Height="10" Width="10" Canvas.Top="418" Canvas.Left="50"/>
+            <Rectangle Fill="Green" Height="10" Width="10" Canvas.Top="433" Canvas.Left="50"/>
+            <TextBlock Text="Set Point" Canvas.Top="400" Canvas.Left="65"/>
+            <TextBlock Text="Process Variable" Canvas.Top="415" Canvas.Left="65"/>
+            <TextBlock Text="Applied Acceleration" Canvas.Top="430" Canvas.Left="65"/>
+        </Canvas>
 
         <Grid Grid.Column="1" Background="DarkGray">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="20"/>
-                <RowDefinition Height="330"/>
+                <RowDefinition Height="280"/>
+                <RowDefinition Height="50"/>
                 <RowDefinition Height="50"/>
             </Grid.RowDefinitions>
             <Button x:Name="PidActive" Content="PID Active?" Grid.Row="0" Click="PidActive_Click"/>
             <TextBlock x:Name="PidActiveDisplay" Text="False" Grid.Row="1" HorizontalAlignment="Center" Foreground="Red"/>
-            <Button x:Name="GoBack" Content="Go Back" Grid.Row="3" Click="GoBack_Click" />
+            <Button x:Name="GraphButton" Content="Open Graph" Grid.Row="3" Click="Graph_Click"/>
+            <Button x:Name="GoBack" Content="Go Back" Grid.Row="4" Click="GoBack_Click" />
 
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>

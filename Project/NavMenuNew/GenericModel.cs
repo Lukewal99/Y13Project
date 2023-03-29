@@ -5,17 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using NavMenu;
 using NavMenuNew;
-using GraphControl;
 
 namespace NavMenuNew
+
+
 {
     public class GenericModel : UserControl
     {
         // Define Variables
         public DispatcherTimer timer;
-        public Graph graph;
-        public UserControl GraphControl = new Graph();
+        public bool graphBool = false;
+        public Graph graph = new Graph();
 
         public double desiredD = 0;
         public double desiredTheta = Math.PI / 2;
@@ -34,5 +36,6 @@ namespace NavMenuNew
         public double kI = 0;
         public double kD = 0;
         public double pidTiming = 0;
+        public int loopCount = 0;
     }
 }

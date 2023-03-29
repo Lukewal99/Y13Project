@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NavMenu;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -34,11 +35,11 @@ namespace NavMenuNew
             timer.Interval = new TimeSpan(0, 0, 0, 0, Period);
             timer.Tick += TimerEvent;
             timer.Start();
-
         }
 
         private void TimerEvent(object sender, EventArgs e)
         {
+            loopCount++;
             // Calculate PID
             // set DAcc and TAcc to 0 if !pidActive
             if (pidActive)
@@ -69,7 +70,15 @@ namespace NavMenuNew
 
             // Update graph
             graph.addPoint(desiredD, currentD, DAcc);
-            graph.updateGraph(Period);
+            if (loopCount == 3)
+            {
+                loopCount = 0;
+                if (graphBool)
+                {
+                    graph.updateGraph(GraphCanvas, Period);
+                }
+            }
+            
 
             // Apply TAcc
             // Cap at 1/20 pi
@@ -148,6 +157,10 @@ namespace NavMenuNew
             ThetaAccelerationDisplay.Text = "Theta Acceleration: " + Convert.ToString(Math.Round(TAcc, 4));
             DistanceVelocityDisplay.Text = "Distance Velocity: " + Convert.ToString(Math.Round(DVel, 3));
             DistanceAccelerationDisplay.Text = "Distance Acceleration: " + Convert.ToString(Math.Round(DAcc, 4));
+
+            SetPoint.Text = Convert.ToString(Math.Round(desiredD, 2));
+            ProcessVariable.Text = Convert.ToString(Math.Round(currentD, 2));
+            AppliecAcceleration.Text = Convert.ToString(Math.Round(DAcc, 2));
 
             //Sets a pointer position to the current desired location
             Canvas.SetLeft(pointer, Canvas.GetLeft(topDownBase) + topDownBase.Width / 2 - pointer.Width / 2 + desiredD * Math.Cos(desiredTheta));
@@ -255,5 +268,22 @@ namespace NavMenuNew
             DesiredThetaDisplay.Text = "Desired Angle: " + Convert.ToString(Math.Round(desiredTheta, 2));
         }
 
+        private void Graph_Click(object sender, RoutedEventArgs e)
+        {
+            graphBool = !graphBool;
+
+            if(graphBool)
+            {
+                GraphButton.Content = "Close Graph";
+                GraphCanvas.Visibility = Visibility.Visible;
+                KeyCanvas.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                GraphButton.Content = "Open Graph";
+                GraphCanvas.Visibility = Visibility.Hidden;
+                KeyCanvas.Visibility = Visibility.Hidden;
+            }
+        }
     }
 }

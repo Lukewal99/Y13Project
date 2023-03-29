@@ -46,6 +46,7 @@ namespace NavMenuNew
 
         private void TimerEvent(object sender, EventArgs e)
         {
+            loopCount++;
             // Calculate desiredD and desiredTheta from desiredX and desiredY
             double deltaX = desiredX - currentX;
             double deltaY = desiredY - currentY;
@@ -110,10 +111,17 @@ namespace NavMenuNew
             }
 
             // Update Graph
-            graph.addPoint(desiredD, currentD, DAcc);
-            graph.updateGraph(Period);
+            graph.addPoint(Math.Sqrt(desiredX*desiredX + desiredY*desiredY), Math.Sqrt(currentX * currentX + currentY * currentY), DAcc);
+            if (loopCount == 3)
+            {
+                loopCount = 0;
+                if (graphBool)
+                {
+                    graph.updateGraph(GraphCanvas, Period);
+                }
+            }
 
-
+            #region
             // Apply TAcc
             // Cap at 1/20 pi
             if (TVel >= 0)
@@ -192,7 +200,7 @@ namespace NavMenuNew
             // Rotate the Car
             RotateTransform carRotateTransform = new RotateTransform(360 * currentTheta / (2 * Math.PI) - 90);
             Car.RenderTransform = carRotateTransform;
-
+            #endregion
 
             DesiredDDisplay.Text = "Desired Distance: " + Math.Round(desiredD,2);
             DesiredThetaDisplay.Text = "Desired Angle: " + Math.Round(desiredTheta/Math.PI,2) + " Pi";
@@ -201,6 +209,10 @@ namespace NavMenuNew
             ThetaAccelerationDisplay.Text = "Theta Acceleration: " + Math.Round(TAcc,7);
             DistanceVelocityDisplay.Text = "Distance Velocity: " + Math.Round(DVel,2);
             DistanceAccelerationDisplay.Text = "Distance Acceleration: " + Math.Round(DAcc,2);
+
+            SetPoint.Text = Convert.ToString(Math.Round(Math.Sqrt(desiredX * desiredX + desiredY * desiredY), 2));
+            ProcessVariable.Text = Convert.ToString(Math.Round(Math.Sqrt(currentX * currentX + currentY * currentY), 2));
+            AppliecAcceleration.Text = Convert.ToString(Math.Round(DAcc, 2));
         }
 
         private void PSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -264,6 +276,24 @@ namespace NavMenuNew
             Canvas.SetLeft(Pointer, desiredX);
             Canvas.SetTop(Pointer, desiredY);
 
+        }
+
+        private void Graph_Click(object sender, RoutedEventArgs e)
+        {
+            graphBool = !graphBool;
+
+            if (graphBool)
+            {
+                GraphButton.Content = "Close Graph";
+                GraphCanvas.Visibility = Visibility.Visible;
+                KeyCanvas.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                GraphButton.Content = "Open Graph";
+                GraphCanvas.Visibility = Visibility.Hidden;
+                KeyCanvas.Visibility = Visibility.Hidden;
+            }
         }
 
     }

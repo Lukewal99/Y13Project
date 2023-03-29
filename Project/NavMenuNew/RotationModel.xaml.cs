@@ -40,6 +40,7 @@ namespace NavMenuNew
         }
         private void TimerEvent(object sender, EventArgs e)
         {
+            loopCount++;
             // Calculate PID
             // set TAcc to 0 if !pidActive
             if (pidActive)
@@ -55,7 +56,14 @@ namespace NavMenuNew
 
             // Update graph
             graph.addPoint(0, currentTheta, pidRotAcc);
-            graph.updateGraph(Period);
+            if (loopCount == 3)
+            {
+                loopCount = 0;
+                if (graphBool)
+                {
+                    graph.updateGraph(GraphCanvas, Period);
+                }
+            }
 
             // Update Angle
             TVel = TVel + appliedRotAcc + pidRotAcc;
@@ -82,6 +90,9 @@ namespace NavMenuNew
             RotVelDisplay.Text = "RotVel: " + Math.Round(TVel, 3);
             PidAccDisplay.Text = "PidAcc: " + Math.Round(pidRotAcc, 3);
             AppliedAccDisplay.Text = "AppliedAcc: " + Math.Round(appliedRotAcc, 3);
+
+            ProcessVariable.Text = Convert.ToString(Math.Round(currentTheta, 2));
+            AppliecAcceleration.Text = Convert.ToString(Math.Round(pidRotAcc, 2));
         }
 
         private void PidActive_Click(object sender, RoutedEventArgs e)
@@ -168,6 +179,24 @@ namespace NavMenuNew
             if (e.Key == Key.Left || e.Key == Key.Right)
             {
                 appliedRotAcc = 0;
+            }
+        }
+
+        private void Graph_Click(object sender, RoutedEventArgs e)
+        {
+            graphBool = !graphBool;
+
+            if (graphBool)
+            {
+                GraphButton.Content = "Close Graph";
+                GraphCanvas.Visibility = Visibility.Visible;
+                KeyCanvas.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                GraphButton.Content = "Open Graph";
+                GraphCanvas.Visibility = Visibility.Hidden;
+                KeyCanvas.Visibility = Visibility.Hidden;
             }
         }
     }
