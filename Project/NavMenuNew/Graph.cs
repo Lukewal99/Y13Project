@@ -19,7 +19,6 @@ namespace NavMenu
         double scaleX = 0;
         double scaleY = 0;
         double scaleYAcc = 0;
-        double totalTime = 0;
 
         public void addPoint(double SP, double PV, double AA)
         {
@@ -38,7 +37,6 @@ namespace NavMenu
         public void updateGraph(Canvas theCanvas, int period)
         { //period is how frequent the points get passed in, ms
             theCanvas.Children.Clear();
-            totalTime = SetPointLine.Count * period / 1000; //Total time covered by the graph, in seconds
             scaleX = 715.0 / (double)(SetPointLine.Count + 1); //The period, but in pixels.
             if (SetPointLine.Max() > 0)
             {
@@ -60,7 +58,7 @@ namespace NavMenu
             
            
 
-            for (int i = 0; i < SetPointLine.Count - 2; i++)
+            for (int i = 0; i < SetPointLine.Count - 2; i++) // Redraw SetPointLine
             {
                 Line line = new Line();
                 line.Y1 = 390 - SetPointLine[i] * scaleY;
@@ -72,7 +70,7 @@ namespace NavMenu
                 theCanvas.Children.Add(line);
             }
 
-            for (int i = 0; i < ProcessValueLine.Count - 2; i++)
+            for (int i = 0; i < ProcessValueLine.Count - 2; i++) // Redraw ProcessValueLine
             {
                 Line line = new Line();
                 line.Y1 = 390 - ProcessValueLine[i] * scaleY;
@@ -84,7 +82,7 @@ namespace NavMenu
                 theCanvas.Children.Add(line);
             }
 
-            for (int i = 0; i < appliedAccLine.Count - 2; i++)
+            for (int i = 0; i < appliedAccLine.Count - 2; i++) // Redraw AppliedAccLine
             {
                 Line line = new Line();
                 line.Y1 = 390 - appliedAccLine[i] * scaleYAcc;
